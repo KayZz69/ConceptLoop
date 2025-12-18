@@ -1,41 +1,49 @@
 # ConceptLoop
 
-An interactive JavaScript learning platform with progressive lessons and coding challenges.
+An interactive JavaScript learning platform with progressive lessons and coding challenges. Learn JavaScript fundamentals through a focused, step-by-step approach.
 
-![ConceptLoop Screenshot](docs/screenshot.png)
+## ✨ Features
 
-## Features
+### Learning Experience
+- **Progressive Lessons** - Step-by-step theory with interactive code execution
+- **Vertical Stack Flow** - Previous content stays visible as you learn
+- **Run Code to Continue** - Must interact with code before progressing
+- **Lesson Reference** - Review theory while coding via tabbed interface
 
-- **Progressive Lessons**: Step-by-step theory with interactive code execution
-- **Vertical Stack Flow**: Learn at your own pace - previous content stays visible
-- **Interactive Challenges**: Apply what you learned with hands-on coding tasks
-- **Lesson Reference**: Review theory while coding with tabbed interface
-- **Collapsible Sidebar**: Focus mode for distraction-free learning
-- **Code Persistence**: Your progress is saved locally
+### User Interface
+- **Focus Mode** - Collapsible sidebar for distraction-free learning
+- **Smooth Transitions** - Animated UI with auto-scroll to new content
+- **Dark Theme** - Easy on the eyes with modern glassmorphism design
 
-## Categories
+### Progress Tracking
+- **Code Persistence** - Your solutions are saved locally
+- **Challenge Completion** - Track your progress across categories
+- **Solution Reveal** - Access solutions after 3 failed attempts
 
-- **JS Basics** - Variables, operators, and fundamentals
-- **Conditionals** - if/else, ternary operators
-- **Loops** - for loops, while loops, iteration
-- **Functions** - Arrow functions, callbacks, default parameters
-- **Strings** - String manipulation methods
-- **Arrays** - Array methods and iteration
-- **Objects** - Object access and manipulation
+## 📚 Categories
 
-## Getting Started
+| Category | Description |
+|----------|-------------|
+| JS Basics | Variables, operators, console.log |
+| Conditionals | if/else, ternary operators, comparisons |
+| Loops | for, while, iteration patterns |
+| Functions | Arrow functions, callbacks, parameters |
+| Strings | String methods and manipulation |
+| Arrays | Array methods, map, filter, reduce |
+| Objects | Object access, properties, methods |
+
+## 🚀 Getting Started
 
 ### Prerequisites
-
 - Node.js 18+
-- npm or yarn
+- npm
 
 ### Installation
 
 ```bash
 # Clone the repository
-git clone https://github.com/YOUR_USERNAME/conceptloop.git
-cd conceptloop
+git clone https://github.com/KayZz69/ConceptLoop.git
+cd ConceptLoop
 
 # Install dependencies
 npm install
@@ -44,7 +52,7 @@ npm install
 npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) in your browser.
+Open [http://localhost:5173](http://localhost:5173) in your browser.
 
 ### Build for Production
 
@@ -53,31 +61,32 @@ npm run build
 npm run preview
 ```
 
-## Tech Stack
+## 🛠 Tech Stack
 
 - **React 18** - UI framework
 - **TypeScript** - Type safety
-- **Vite** - Build tool
-- **Tailwind CSS** - Styling
+- **Vite** - Build tool & dev server
+- **Tailwind CSS** - Utility-first styling
 
-## Project Structure
+## 📁 Project Structure
 
 ```
 src/
 ├── components/
-│   ├── LessonView.tsx    # Interactive lesson wizard
-│   ├── ProblemCard.tsx   # Challenge task/reference tabs
-│   ├── Editor.tsx        # Code editor
+│   ├── LessonView.tsx    # Progressive lesson wizard
+│   ├── ProblemCard.tsx   # Task & lesson reference tabs
+│   ├── Editor.tsx        # Code editor with syntax highlighting
 │   ├── Console.tsx       # Test results display
-│   └── Sidebar.tsx       # Navigation sidebar
+│   └── Sidebar.tsx       # Collapsible navigation
 ├── data/
-│   └── challenges.ts     # Challenge definitions with theory steps
+│   └── challenges.ts     # 21 challenges with theory steps
 ├── utils/
-│   └── runCode.ts        # Code execution engine
-├── App.tsx               # Main application
+│   └── runCode.ts        # Safe code execution engine
+├── App.tsx               # Main application logic
+├── index.css             # Global styles & animations
 └── main.tsx              # Entry point
 ```
 
-## License
+## 📄 License
 
 MIT
