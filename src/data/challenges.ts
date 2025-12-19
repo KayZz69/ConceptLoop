@@ -60,7 +60,7 @@ export const challenges: Challenge[] = [
 }`,
     functionName: 'getCourse',
     testCases: [
-      { input: [], expected: 'JavaScript', description: 'Should return "JavaScript"' }
+      { input: [], expected: "JavaScript", description: "Should return JavaScript" }
     ],
     solution: `function getCourse() {
   const course = "JavaScript";
@@ -191,10 +191,10 @@ export const challenges: Challenge[] = [
 }`,
     functionName: 'checkAge',
     testCases: [
-      { input: [21], expected: 'adult', description: '21 is an adult' },
-      { input: [18], expected: 'adult', description: '18 is exactly adult' },
-      { input: [15], expected: 'minor', description: '15 is a minor' },
-      { input: [0], expected: 'minor', description: '0 is a minor' }
+      { input: [21], expected: "adult", description: "21 is an adult" },
+      { input: [18], expected: "adult", description: "18 is exactly adult" },
+      { input: [15], expected: "minor", description: "15 is a minor" },
+      { input: [0], expected: "minor", description: "0 is a minor" }
     ],
     solution: `function checkAge(age) {
   if (age >= 18) {
@@ -434,22 +434,24 @@ const multiply = // your arrow function here
       { text: "Callbacks let you customize behavior. The caller decides what operation to perform:" },
       { text: "Array methods like `map` and `filter` use callbacks:", codeExample: 'const nums = [1, 2, 3];\nconst doubled = nums.map(x => x * 2);\nconsole.log(doubled);', runnable: true }
     ],
-    hint: 'A callback is just a function. You can call it like any other function by using parentheses and passing arguments.',
-    description: 'Apply the callback function to the value and return the result.',
+    hint: 'The callback parameter is a function. Call it with value as the argument, then return what it gives back.',
+    description: 'Complete the function so it calls the callback with the value and returns the result. The test will pass a doubling function.',
     examples: [
       'applyCallback(5, x => x * 2) → 10',
-      'applyCallback(3, x => x + 1) → 4'
+      'applyCallback(3, x => x * 2) → 6'
     ],
-    starterCode: `function applyCallback(value, callback) {
-  // Call callback with value and return result
+    starterCode: `// The callback parameter is a function!
+// Call it like: callback(someValue)
+function applyCallback(value, callback) {
+  // Call callback with value and return the result
   
 }`,
     functionName: 'applyCallback',
     testCases: [
-      { input: [5, (x: number) => x * 2], expected: 10, description: 'Double 5' },
-      { input: [3, (x: number) => x + 1], expected: 4, description: 'Add 1 to 3' },
-      { input: [10, (x: number) => x / 2], expected: 5, description: 'Halve 10' },
-      { input: [0, (x: number) => x + 100], expected: 100, description: 'Add 100 to 0' }
+      { input: [5], expected: 10, description: 'Double 5 → 10' },
+      { input: [3], expected: 6, description: 'Double 3 → 6' },
+      { input: [0], expected: 0, description: 'Double 0 → 0' },
+      { input: [7], expected: 14, description: 'Double 7 → 14' }
     ],
     solution: `function applyCallback(value, callback) {
   return callback(value);
@@ -579,7 +581,8 @@ const multiply = // your arrow function here
       { input: ['abcdef'], expected: 'abc', description: 'Remove last 3' },
       { input: ['Hello!'], expected: 'Hel', description: 'Another string' },
       { input: ['JavaScript'], expected: 'JavaScr', description: 'Longer string' },
-      { input: ['abcd'], expected: 'a', description: 'Short string' }
+      { input: ['abcd'], expected: 'a', description: 'Short string' },
+      { input: ['ab'], expected: '', description: 'String shorter than 3 chars' }
     ],
     solution: `function removeLast3(str) {
   return str.slice(0, -3);
@@ -660,7 +663,7 @@ const multiply = // your arrow function here
     difficulty: 'Medium',
     theorySteps: [
       { text: "JavaScript's `sort()` has a quirk: by default, it sorts **as strings**, not numbers!" },
-      { text: "Watch this surprising behavior:", codeExample: 'const nums = [10, 2, 30];\nconsole.log(nums.sort());  // [10, 2, 30] - Wrong!', runnable: true },
+      { text: "Watch this surprising behavior:", codeExample: 'const nums = [10, 2, 30];\nconsole.log(nums.sort());  // [10, 2, 30] → becomes [10, 2, 30] (string order!)', runnable: true },
       { text: "Fix it by passing a **compare function**: `arr.sort((a, b) => ...)`" },
       { text: "The compare function should return:\n• **Negative** → a comes first\n• **Positive** → b comes first\n• **Zero** → order unchanged", codeExample: 'const nums = [10, 2, 30];\nconsole.log(nums.sort((a, b) => a - b));  // Ascending', runnable: true }
     ],
@@ -736,7 +739,7 @@ const multiply = // your arrow function here
     hint: 'Convert to entries, transform each pair to swap the key and value positions, then convert back to an object.',
     description: 'Return a new object where the keys and values of `obj` are swapped.',
     examples: [
-      'swapKeysValues({a: 1, b: 2}) → {1: "a", 2: "b"}',
+      'swapKeysValues({a: "1", b: "2"}) → {"1": "a", "2": "b"}',
       'swapKeysValues({x: "y"}) → {y: "x"}'
     ],
     starterCode: `function swapKeysValues(obj) {

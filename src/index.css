@@ -5,10 +5,75 @@
 @tailwind utilities;
 
 /* ============================================
-   PREMIUM DARK THEME - ConceptLoop
+   THEME VARIABLES - ConceptLoop
    ============================================ */
 
-/* Base Styles */
+:root {
+  /* Dark theme (default) */
+  --color-bg-primary: #0a0a0f;
+  --color-bg-secondary: #0f0f18;
+  --color-bg-tertiary: #161625;
+  --color-bg-glass: rgba(30, 30, 50, 0.6);
+  --color-bg-glass-dark: rgba(15, 15, 24, 0.8);
+  --color-bg-glass-light: rgba(42, 42, 69, 0.5);
+  
+  --color-text-primary: #e2e8f0;
+  --color-text-secondary: #94a3b8;
+  --color-text-muted: #64748b;
+  --color-text-dim: #475569;
+  
+  --color-border: rgba(255, 255, 255, 0.08);
+  --color-border-light: rgba(255, 255, 255, 0.1);
+  
+  --color-scrollbar-track: rgba(15, 15, 24, 0.5);
+  --color-scrollbar-thumb: linear-gradient(180deg, #2a2a45, #1e1e32);
+  --color-scrollbar-hover: linear-gradient(180deg, #3a3a5a, #2a2a45);
+  
+  --color-code-bg: linear-gradient(180deg, #0f0f18 0%, #0a0a0f 100%);
+  --color-line-numbers-bg: rgba(15, 15, 24, 0.8);
+  
+  --color-selection: rgba(0, 212, 255, 0.3);
+  --color-caret: #00d4ff;
+  
+  /* Accent colors (same for both themes) */
+  --color-accent-cyan: #00d4ff;
+  --color-accent-purple: #a855f7;
+  --color-accent-green: #34d399;
+  --color-accent-amber: #fbbf24;
+  --color-accent-red: #ef4444;
+}
+
+[data-theme="light"] {
+  --color-bg-primary: #f8fafc;
+  --color-bg-secondary: #f1f5f9;
+  --color-bg-tertiary: #e2e8f0;
+  --color-bg-glass: rgba(255, 255, 255, 0.8);
+  --color-bg-glass-dark: rgba(241, 245, 249, 0.9);
+  --color-bg-glass-light: rgba(255, 255, 255, 0.6);
+  
+  --color-text-primary: #1e293b;
+  --color-text-secondary: #475569;
+  --color-text-muted: #64748b;
+  --color-text-dim: #94a3b8;
+  
+  --color-border: rgba(0, 0, 0, 0.1);
+  --color-border-light: rgba(0, 0, 0, 0.06);
+  
+  --color-scrollbar-track: rgba(241, 245, 249, 0.8);
+  --color-scrollbar-thumb: linear-gradient(180deg, #cbd5e1, #94a3b8);
+  --color-scrollbar-hover: linear-gradient(180deg, #94a3b8, #64748b);
+  
+  --color-code-bg: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+  --color-line-numbers-bg: rgba(241, 245, 249, 0.9);
+  
+  --color-selection: rgba(0, 150, 200, 0.2);
+  --color-caret: #0284c7;
+}
+
+/* ============================================
+   BASE STYLES
+   ============================================ */
+
 * {
   margin: 0;
   padding: 0;
@@ -22,9 +87,10 @@ html {
 }
 
 body {
-  background: linear-gradient(135deg, #0a0a0f 0%, #0f0f18 50%, #161625 100%);
-  color: #e2e8f0;
+  background: linear-gradient(135deg, var(--color-bg-primary) 0%, var(--color-bg-secondary) 50%, var(--color-bg-tertiary) 100%);
+  color: var(--color-text-primary);
   min-height: 100vh;
+  transition: background 0.3s ease, color 0.3s ease;
 }
 
 /* Monospace Font for Code */
@@ -37,24 +103,24 @@ body {
    ============================================ */
 
 .glass {
-  background: rgba(30, 30, 50, 0.6);
+  background: var(--color-bg-glass);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  border: 1px solid var(--color-border);
 }
 
 .glass-dark {
-  background: rgba(15, 15, 24, 0.8);
+  background: var(--color-bg-glass-dark);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--color-border-light);
 }
 
 .glass-light {
-  background: rgba(42, 42, 69, 0.5);
+  background: var(--color-bg-glass-light);
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid var(--color-border);
 }
 
 /* ============================================
@@ -62,7 +128,7 @@ body {
    ============================================ */
 
 .gradient-text {
-  background: linear-gradient(135deg, #00d4ff 0%, #a855f7 100%);
+  background: linear-gradient(135deg, var(--color-accent-cyan) 0%, var(--color-accent-purple) 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -78,7 +144,7 @@ body {
   inset: 0;
   border-radius: inherit;
   padding: 1px;
-  background: linear-gradient(135deg, #00d4ff, #a855f7);
+  background: linear-gradient(135deg, var(--color-accent-cyan), var(--color-accent-purple));
   -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
   mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
   -webkit-mask-composite: xor;
@@ -86,7 +152,7 @@ body {
 }
 
 /* ============================================
-   CUSTOM SCROLLBAR - Dark Theme
+   CUSTOM SCROLLBAR
    ============================================ */
 
 ::-webkit-scrollbar {
@@ -95,17 +161,17 @@ body {
 }
 
 ::-webkit-scrollbar-track {
-  background: rgba(15, 15, 24, 0.5);
+  background: var(--color-scrollbar-track);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: linear-gradient(180deg, #2a2a45, #1e1e32);
+  background: var(--color-scrollbar-thumb);
   border-radius: 4px;
-  border: 1px solid rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--color-border-light);
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: linear-gradient(180deg, #3a3a5a, #2a2a45);
+  background: var(--color-scrollbar-hover);
 }
 
 /* ============================================
@@ -140,8 +206,8 @@ button:focus:not(:focus-visible) {
    ============================================ */
 
 ::selection {
-  background-color: rgba(0, 212, 255, 0.3);
-  color: #fff;
+  background-color: var(--color-selection);
+  color: var(--color-text-primary);
 }
 
 textarea::selection {
@@ -169,8 +235,8 @@ textarea::selection {
    ============================================ */
 
 .btn-primary {
-  background: linear-gradient(135deg, #00d4ff 0%, #0ea5e9 100%);
-  color: #0a0a0f;
+  background: linear-gradient(135deg, var(--color-accent-cyan) 0%, #0ea5e9 100%);
+  color: var(--color-bg-primary);
   font-weight: 600;
   transition: all 0.2s ease;
 }
@@ -181,8 +247,8 @@ textarea::selection {
 }
 
 .btn-success {
-  background: linear-gradient(135deg, #34d399 0%, #10b981 100%);
-  color: #0a0a0f;
+  background: linear-gradient(135deg, var(--color-accent-green) 0%, #10b981 100%);
+  color: var(--color-bg-primary);
   font-weight: 600;
 }
 
@@ -196,19 +262,19 @@ textarea::selection {
    ============================================ */
 
 .code-editor {
-  background: linear-gradient(180deg, #0f0f18 0%, #0a0a0f 100%);
-  border: 1px solid rgba(255, 255, 255, 0.05);
+  background: var(--color-code-bg);
+  border: 1px solid var(--color-border-light);
 }
 
 .code-editor textarea {
-  caret-color: #00d4ff;
+  caret-color: var(--color-caret);
 }
 
 /* Line numbers styling */
 .line-numbers {
-  background: rgba(15, 15, 24, 0.8);
-  border-right: 1px solid rgba(255, 255, 255, 0.05);
-  color: #475569;
+  background: var(--color-line-numbers-bg);
+  border-right: 1px solid var(--color-border-light);
+  color: var(--color-text-dim);
 }
 
 /* ============================================
@@ -251,6 +317,21 @@ textarea::selection {
 
 .animate-fadeIn {
   animation: fadeIn 0.3s ease-out;
+}
+
+@keyframes slideUp {
+  from { 
+    opacity: 0; 
+    transform: translateY(16px); 
+  }
+  to { 
+    opacity: 1; 
+    transform: translateY(0); 
+  }
+}
+
+.animate-slideUp {
+  animation: slideUp 0.5s ease-out forwards;
 }
 
 .animate-slideIn {
@@ -311,4 +392,30 @@ textarea::selection {
 
 .animate-slideInFromLeft {
   animation: slideInFromLeft 0.3s ease-out;
+}
+
+/* ============================================
+   THEME TOGGLE STYLES
+   ============================================ */
+
+.theme-toggle {
+  position: relative;
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.theme-toggle:hover {
+  background: var(--color-bg-glass-light);
+}
+
+.theme-toggle svg {
+  width: 20px;
+  height: 20px;
+  transition: transform 0.3s ease, opacity 0.3s ease;
 }

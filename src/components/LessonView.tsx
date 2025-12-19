@@ -6,14 +6,19 @@ interface LessonViewProps {
     onLessonComplete: () => void;
     currentIndex: number;
     totalChallenges: number;
+    theme?: 'dark' | 'light';
 }
 
-export function LessonView({ challenge, onLessonComplete, currentIndex, totalChallenges }: LessonViewProps) {
+export function LessonView({ challenge, onLessonComplete, currentIndex, totalChallenges, theme = 'dark' }: LessonViewProps) {
     const [stepIndex, setStepIndex] = useState(0);
     const [stepStates, setStepStates] = useState<Record<number, { hasRun: boolean; output: string | null }>>({});
     const [isRunning, setIsRunning] = useState<number | null>(null);
     const containerRef = useRef<HTMLDivElement>(null);
     const stepRefs = useRef<(HTMLDivElement | null)[]>([]);
+    // Track previous step index to detect when user advances to a new step.
+    // This prevents auto-scroll on initial render or challenge reset, ensuring
+    // scroll only triggers when genuinely moving forward in the lesson.
+    const prevStepIndexRef = useRef(0);
 
     const steps = challenge.theorySteps || [];
     const totalSteps = steps.length;
@@ -23,16 +28,21 @@ export function LessonView({ challenge, onLessonComplete, currentIndex, totalCha
     useEffect(() => {
         setStepIndex(0);
         setStepStates({});
+        prevStepIndexRef.current = 0;
     }, [challenge.id]);
 
-    // Auto-scroll to current step when it changes
+    // Auto-scroll ONLY when a new step is revealed (stepIndex increases)
     useEffect(() => {
-        const currentStepRef = stepRefs.current[stepIndex];
-        if (currentStepRef) {
-            setTimeout(() => {
-                currentStepRef.scrollIntoView({ behavior: 'smooth', block: 'center' });
-            }, 100);
+        // Only scroll if stepIndex actually increased (not on initial render or reset)
+        if (stepIndex > prevStepIndexRef.current) {
+            const currentStepRef = stepRefs.current[stepIndex];
+            if (currentStepRef && containerRef.current) {
+                setTimeout(() => {
+                    currentStepRef.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }, 150);
+            }
         }
+        prevStepIndexRef.current = stepIndex;
     }, [stepIndex]);
 
     // Check if current step can continue
@@ -76,12 +86,6 @@ export function LessonView({ challenge, onLessonComplete, currentIndex, totalCha
         }
     };
 
-    const handleBack = () => {
-        if (stepIndex > 0) {
-            setStepIndex(prev => prev - 1);
-        }
-    };
-
     const difficultyColors: Record<string, string> = {
         'Beginner': 'text-accent-green',
         'Easy': 'text-accent-cyan',
@@ -98,16 +102,19 @@ export function LessonView({ challenge, onLessonComplete, currentIndex, totalCha
     const visibleSteps = steps.slice(0, stepIndex + 1);
 
     return (
-        <div className="flex-1 flex flex-col overflow-hidden">
+        <div className="flex-1 flex flex-col min-h-0">
             {/* Fixed header - responsive padding */}
-            <div className="shrink-0 px-4 md:px-8 py-3 md:py-4 border-b border-white/5 bg-dark-900/80 backdrop-blur-sm">
-                <div className="max-w-2xl mx-auto">
+            <div className={`shrink-0 px-4 md:px-8 py-3 md:py-4 border-b backdrop-blur-sm ${theme === 'dark'
+                ? 'border-white/5 bg-dark-900/80'
+                : 'border-slate-200 bg-white/80'
+                }`}>
+                <div className="max-w-3xl mx-auto">
                     <div className="flex items-center justify-between mb-2 md:mb-3">
                         <div className="flex items-center gap-2 md:gap-3">
                             <span className="text-xs text-slate-500">
                                 {challenge.category}
                             </span>
-                            <span className="text-white/20 hidden md:inline">•</span>
+                            <span className={theme === 'dark' ? 'text-white/20' : 'text-slate-300'}>•</span>
                             <span className={`text-xs ${difficultyColors[challenge.difficulty]} hidden md:inline`}>
                                 {challenge.difficulty}
                             </span>
@@ -116,7 +123,8 @@ export function LessonView({ challenge, onLessonComplete, currentIndex, totalCha
                             {currentIndex + 1} / {totalChallenges}
                         </span>
                     </div>
-                    <h1 className="text-xl md:text-2xl font-bold text-white mb-2 md:mb-3">
+                    <h1 className={`text-xl md:text-2xl font-bold mb-2 md:mb-3 ${theme === 'dark' ? 'text-white' : 'text-slate-900'
+                        }`}>
                         {challenge.title}
                     </h1>
                     {/* Progress bar */}
@@ -134,61 +142,58 @@ export function LessonView({ challenge, onLessonComplete, currentIndex, totalCha
                 </div>
             </div>
 
-            {/* Scrollable vertical stack - responsive padding */}
+            {/* Scrollable continuous document - flex-1 min-h-0 pattern for mobile flexbox fix */}
             <div
                 ref={containerRef}
-                className="flex-1 overflow-y-auto px-4 md:px-8 py-6 md:py-12 scrollbar-hide"
+                className="flex-1 min-h-0 overflow-y-auto px-4 md:px-8 py-6 md:py-12 scrollbar-hide"
             >
-                <div className="max-w-2xl mx-auto space-y-8 md:space-y-16">
-                    {visibleSteps.map((step, idx) => {
-                        const isCompleted = idx < stepIndex;
-                        const isCurrent = idx === stepIndex;
-                        const state = stepStates[idx] || { hasRun: false, output: null };
+                <div className="max-w-3xl mx-auto">
+                    {/* Continuous content flow - no card borders */}
+                    <div className={`divide-y ${theme === 'dark' ? 'divide-white/5' : 'divide-slate-200'
+                        }`}>
+                        {visibleSteps.map((step, idx) => {
+                            const isCompleted = idx < stepIndex;
+                            const isCurrent = idx === stepIndex;
+                            const state = stepStates[idx] || { hasRun: false, output: null };
 
-                        return (
-                            <div
-                                key={idx}
-                                ref={el => stepRefs.current[idx] = el}
-                                className={`transition-all duration-500 ${isCompleted ? 'opacity-50 hover:opacity-100' : 'opacity-100'
-                                    } ${isCurrent ? 'animate-fadeIn' : ''}`}
-                            >
-                                <StepCard
-                                    step={step}
-                                    stepNumber={idx + 1}
-                                    totalSteps={totalSteps}
-                                    isCurrent={isCurrent}
-                                    hasRun={state.hasRun}
-                                    output={state.output}
-                                    isRunning={isRunning === idx}
-                                    onRunCode={() => handleRunCode(step.codeExample!, idx)}
-                                />
-                            </div>
-                        );
-                    })}
+                            return (
+                                <div
+                                    key={idx}
+                                    ref={el => stepRefs.current[idx] = el}
+                                    className={`transition-opacity duration-500 ${isCompleted ? 'opacity-75' : 'opacity-100'
+                                        } ${isCurrent ? 'animate-fadeIn' : ''}`}
+                                >
+                                    <StepCard
+                                        step={step}
+                                        hasRun={state.hasRun}
+                                        output={state.output}
+                                        isRunning={isRunning === idx}
+                                        onRunCode={() => handleRunCode(step.codeExample!, idx)}
+                                        theme={theme}
+                                    />
+                                </div>
+                            );
+                        })}
+                    </div>
 
-                    {/* Navigation at bottom - touch-friendly */}
-                    <div className="pt-6 md:pt-8 pb-24 md:pb-32">
-                        <div className="flex items-center justify-between gap-4">
-                            <button
-                                onClick={handleBack}
-                                disabled={stepIndex === 0}
-                                className={`px-4 md:px-5 py-3 md:py-2.5 text-sm font-medium rounded-xl transition-all duration-200 flex items-center gap-2 min-h-[44px] ${stepIndex === 0
-                                    ? 'text-slate-600 cursor-not-allowed'
-                                    : 'text-slate-400 hover:text-white hover:bg-dark-600/50'
-                                    }`}
-                            >
-                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-                                </svg>
-                                Back
-                            </button>
+                    {/* Single Continue button at bottom - with safe area bottom for notched devices */}
+                    <div className="pt-8 md:pt-12 pb-24 md:pb-32 safe-area-bottom">
+                        {/* Hint when blocked by runnable code */}
+                        {needsRunCode && !hasRunCurrent && (
+                            <p className="text-center text-sm text-accent-amber mb-6 animate-pulse">
+                                👆 Run the code above to continue
+                            </p>
+                        )}
 
+                        <div className="flex justify-center">
                             <button
                                 onClick={handleContinue}
                                 disabled={!canContinue}
-                                className={`flex-1 md:flex-none px-6 md:px-8 py-3 md:py-3.5 text-base font-semibold rounded-xl transition-all duration-200 flex items-center justify-center gap-2 md:gap-3 min-h-[44px] ${canContinue
-                                    ? 'bg-accent-purple text-white hover:bg-accent-purple/90 shadow-lg shadow-accent-purple/20'
-                                    : 'bg-dark-600 text-slate-500 cursor-not-allowed'
+                                className={`px-8 md:px-10 py-3.5 md:py-4 text-base font-semibold rounded-xl transition-all duration-200 flex items-center gap-3 min-h-[44px] ${canContinue
+                                    ? 'bg-accent-purple text-white hover:bg-accent-purple/90 shadow-lg shadow-accent-purple/20 hover:shadow-xl hover:shadow-accent-purple/30 hover:-translate-y-0.5'
+                                    : theme === 'dark'
+                                        ? 'bg-dark-600 text-slate-500 cursor-not-allowed'
+                                        : 'bg-slate-200 text-slate-400 cursor-not-allowed'
                                     }`}
                             >
                                 {isLastStep ? 'Start Challenge' : 'Continue'}
@@ -197,22 +202,21 @@ export function LessonView({ challenge, onLessonComplete, currentIndex, totalCha
                                 </svg>
                             </button>
                         </div>
-
-                        {/* Hint when blocked */}
-                        {needsRunCode && !hasRunCurrent && (
-                            <p className="text-center text-xs text-accent-amber mt-4 animate-pulse">
-                                👆 Run the code above to continue
-                            </p>
-                        )}
                     </div>
                 </div>
             </div>
 
-            {/* Skip lesson link - fixed at bottom, touch-friendly */}
-            <div className="shrink-0 py-2 md:py-3 text-center border-t border-white/5 bg-dark-900/80">
+            {/* Skip lesson link - fixed at bottom, touch-friendly with safe-area for notched devices */}
+            <div className={`shrink-0 py-2 md:py-3 text-center border-t safe-area-bottom ${theme === 'dark'
+                ? 'border-white/5 bg-dark-900/80'
+                : 'border-slate-200 bg-white/80'
+                }`}>
                 <button
                     onClick={onLessonComplete}
-                    className="text-xs text-slate-600 hover:text-slate-400 transition-colors py-2 px-4 min-h-[44px]"
+                    className={`text-xs transition-colors py-2 px-4 min-h-[44px] ${theme === 'dark'
+                        ? 'text-slate-600 hover:text-slate-400'
+                        : 'text-slate-500 hover:text-slate-700'
+                        }`}
                 >
                     Skip to challenge →
                 </button>
@@ -221,111 +225,109 @@ export function LessonView({ challenge, onLessonComplete, currentIndex, totalCha
     );
 }
 
-// Individual step card component
+
+// Individual step content block - no card styling
 interface StepCardProps {
     step: TheoryStep;
-    stepNumber: number;
-    totalSteps: number;
-    isCurrent: boolean;
     hasRun: boolean;
     output: string | null;
     isRunning: boolean;
     onRunCode: () => void;
+    theme: 'dark' | 'light';
 }
 
-function StepCard({ step, stepNumber, totalSteps, isCurrent, hasRun, output, isRunning, onRunCode }: StepCardProps) {
+function StepCard({ step, hasRun, output, isRunning, onRunCode, theme }: StepCardProps) {
     return (
-        <div className={`glass rounded-xl md:rounded-2xl overflow-hidden transition-all duration-300 ${isCurrent ? 'ring-2 ring-accent-purple/50' : ''
-            }`}>
-            {/* Step header - responsive padding */}
-            <div className="px-4 md:px-6 py-3 md:py-4 bg-gradient-to-r from-accent-purple/10 to-transparent border-b border-white/5">
-                <div className="flex items-center gap-2 md:gap-3">
-                    <div className={`w-7 h-7 md:w-8 md:h-8 rounded-full flex items-center justify-center text-sm font-bold ${hasRun || !step.runnable ? 'bg-accent-green/20 text-accent-green' : 'bg-accent-purple/20 text-accent-purple'
-                        }`}>
-                        {hasRun || !step.runnable ? '✓' : stepNumber}
-                    </div>
-                    <span className="text-xs text-slate-500">
-                        Step {stepNumber} of {totalSteps}
-                    </span>
+        <div className="py-6 md:py-8">
+            {/* Step text content - clean, borderless */}
+            <p className={`text-base md:text-lg leading-relaxed ${theme === 'dark' ? 'text-slate-200' : 'text-slate-600'
+                }`}>
+                {renderText(step.text, theme)}
+            </p>
+
+            {/* Code example */}
+            {step.codeExample && (
+                <div className="mt-4 md:mt-6">
+                    <pre className="code-editor rounded-lg md:rounded-xl px-4 md:px-5 py-3 md:py-4 overflow-x-auto font-mono text-[14px] md:text-sm leading-relaxed text-accent-cyan">
+                        <code>{step.codeExample}</code>
+                    </pre>
+
+                    {step.runnable && (
+                        <div className="mt-4 flex justify-center">
+                            <button
+                                onClick={onRunCode}
+                                disabled={isRunning || hasRun}
+                                className={`px-5 md:px-6 py-3 text-sm font-semibold rounded-xl transition-all duration-200 flex items-center gap-2 md:gap-3 min-h-[44px] ${hasRun
+                                    ? 'bg-accent-green/20 text-accent-green border border-accent-green/30'
+                                    : 'bg-accent-amber text-dark-900 hover:bg-accent-amber/90 shadow-lg shadow-accent-amber/20'
+                                    }`}
+                            >
+                                {isRunning ? (
+                                    <>
+                                        <span className="w-4 h-4 border-2 border-dark-900/40 border-t-dark-900 rounded-full animate-spin" />
+                                        Running...
+                                    </>
+                                ) : hasRun ? (
+                                    <>
+                                        <span>✓</span>
+                                        Done
+                                    </>
+                                ) : (
+                                    <>
+                                        <span className="text-lg">▶</span>
+                                        Run Code
+                                    </>
+                                )}
+                            </button>
+                        </div>
+                    )}
+
+                    {/* Console output */}
+                    {output && (
+                        <div className={`mt-4 rounded-lg md:rounded-xl px-4 md:px-5 py-3 md:py-4 border animate-fadeIn ${theme === 'dark'
+                                ? 'bg-dark-900/80 border-accent-cyan/20'
+                                : 'bg-slate-100 border-slate-300'
+                            }`}>
+                            <div className="text-xs text-slate-500 uppercase tracking-wider mb-2 flex items-center gap-2">
+                                <span className="w-2 h-2 bg-accent-cyan rounded-full animate-pulse" />
+                                Output
+                            </div>
+                            <pre className="font-mono text-sm md:text-base text-accent-cyan whitespace-pre-wrap">
+                                {output}
+                            </pre>
+                        </div>
+                    )}
                 </div>
-            </div>
-
-            {/* Step content - responsive padding and typography */}
-            <div className="px-4 md:px-6 py-4 md:py-6">
-                <p className="text-base md:text-lg text-slate-200 leading-relaxed">
-                    {renderText(step.text)}
-                </p>
-
-                {/* Code example */}
-                {step.codeExample && (
-                    <div className="mt-4 md:mt-6">
-                        <pre className="code-editor rounded-lg md:rounded-xl px-4 md:px-5 py-3 md:py-4 overflow-x-auto font-mono text-[14px] md:text-sm leading-relaxed text-accent-cyan">
-                            <code>{step.codeExample}</code>
-                        </pre>
-
-                        {step.runnable && (
-                            <div className="mt-4 flex justify-center">
-                                <button
-                                    onClick={onRunCode}
-                                    disabled={isRunning || hasRun}
-                                    className={`px-5 md:px-6 py-3 text-sm font-semibold rounded-xl transition-all duration-200 flex items-center gap-2 md:gap-3 min-h-[44px] ${hasRun
-                                        ? 'bg-accent-green/20 text-accent-green border border-accent-green/30'
-                                        : 'bg-accent-amber text-dark-900 hover:bg-accent-amber/90 shadow-lg shadow-accent-amber/20'
-                                        }`}
-                                >
-                                    {isRunning ? (
-                                        <>
-                                            <span className="w-4 h-4 border-2 border-dark-900/40 border-t-dark-900 rounded-full animate-spin" />
-                                            Running...
-                                        </>
-                                    ) : hasRun ? (
-                                        <>
-                                            <span>✓</span>
-                                            Done
-                                        </>
-                                    ) : (
-                                        <>
-                                            <span className="text-lg">▶</span>
-                                            Run Code
-                                        </>
-                                    )}
-                                </button>
-                            </div>
-                        )}
-
-                        {/* Console output - show actual values, responsive sizing */}
-                        {output && (
-                            <div className="mt-4 bg-dark-900/80 rounded-lg md:rounded-xl px-4 md:px-5 py-3 md:py-4 border border-accent-cyan/20 animate-fadeIn">
-                                <div className="text-xs text-slate-500 uppercase tracking-wider mb-2 flex items-center gap-2">
-                                    <span className="w-2 h-2 bg-accent-cyan rounded-full animate-pulse" />
-                                    Output
-                                </div>
-                                <pre className="font-mono text-sm md:text-base text-accent-cyan whitespace-pre-wrap">
-                                    {output}
-                                </pre>
-                            </div>
-                        )}
-                    </div>
-                )}
-            </div>
+            )}
         </div>
     );
 }
 
+
 // Helper to render text with inline formatting
-function renderText(text: string): React.ReactNode {
+function renderText(text: string, theme: 'dark' | 'light' = 'dark'): React.ReactNode {
     // Handle newlines
     const lines = text.split('\n');
 
     return lines.map((line, lineIndex) => (
         <span key={lineIndex}>
             {lineIndex > 0 && <br />}
-            {renderLineFormatting(line, `line-${lineIndex}`)}
+            {renderLineFormatting(line, `line-${lineIndex}`, theme)}
         </span>
     ));
 }
 
-function renderLineFormatting(text: string, keyPrefix: string): React.ReactNode {
+/**
+ * Parse markdown-like inline formatting in lesson text.
+ * Supports two patterns:
+ *   - `code` -> rendered as <code> with cyan styling
+ *   - **bold** -> rendered as <strong> with white text
+ *
+ * Uses a greedy approach: finds earliest match of either pattern,
+ * renders it, then continues with remaining text. This ensures
+ * proper nesting behavior (e.g., "Use `const` for **variables**").
+ */
+function renderLineFormatting(text: string, keyPrefix: string, theme: 'dark' | 'light' = 'dark'): React.ReactNode {
     const parts: React.ReactNode[] = [];
     let remaining = text;
     let key = 0;
@@ -349,7 +351,8 @@ function renderLineFormatting(text: string, keyPrefix: string): React.ReactNode 
                 parts.push(remaining.slice(0, boldMatch.index));
             }
             parts.push(
-                <strong key={`${keyPrefix}-${key++}`} className="font-bold text-white">
+                <strong key={`${keyPrefix}-${key++}`} className={`font-bold ${theme === 'dark' ? 'text-white' : 'text-slate-900'
+                    }`}>
                     {boldMatch[1]}
                 </strong>
             );

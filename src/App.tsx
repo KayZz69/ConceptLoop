@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect, useMemo } from 'react';
+import { useState, useCallback, useEffect, useMemo, useRef } from 'react';
 import { challenges, Category } from './data/challenges';
 import { Sidebar, SidebarToggle } from './components/Sidebar';
 import { MobileHeader } from './components/MobileHeader';
@@ -13,6 +13,8 @@ export default function App() {
     const [selectedCategory, setSelectedCategory] = useState<Category | null>(null);
     const [currentChallengeIndex, setCurrentChallengeIndex] = useState(0);
     const [code, setCode] = useState('');
+    // Ref to always have the current code value (avoids stale closures)
+    const codeRef = useRef(code);
     const [results, setResults] = useState<TestResult[]>([]);
     const [hasRun, setHasRun] = useState(false);
     const [isRunning, setIsRunning] = useState(false);
@@ -32,6 +34,22 @@ export default function App() {
     // Mobile-specific state
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const [activeMobileTab, setActiveMobileTab] = useState<MobileTab>('task');
+
+    // Theme state with localStorage persistence
+    const [theme, setTheme] = useState<'dark' | 'light'>(() => {
+        const saved = localStorage.getItem('conceptLoop_theme');
+        return (saved === 'light' || saved === 'dark') ? saved : 'dark';
+    });
+
+    // Apply theme to document
+    useEffect(() => {
+        document.documentElement.setAttribute('data-theme', theme);
+        localStorage.setItem('conceptLoop_theme', theme);
+    }, [theme]);
+
+    const toggleTheme = useCallback(() => {
+        setTheme(prev => prev === 'dark' ? 'light' : 'dark');
+    }, []);
 
     // Load saved code for current challenge
     const getSavedCode = (challengeId: string): string | null => {
@@ -89,15 +107,25 @@ export default function App() {
         setIsLessonPhase(false);
     }, []);
 
+    // Keep codeRef in sync with code state
+    useEffect(() => {
+        codeRef.current = code;
+    }, [code]);
+
     // Handle code execution
     const handleRun = useCallback(() => {
         if (!currentChallenge) return;
 
         setIsRunning(true);
 
+        // Use ref to always get the CURRENT code value (fixes stale closure bug)
+        const currentCode = codeRef.current;
+
+        // Small delay (300ms) provides visual feedback that code is "running",
+        // preventing the UI from feeling instantaneous/glitchy for fast executions.
         setTimeout(() => {
             const testResults = runCode(
-                code,
+                currentCode,
                 currentChallenge.functionName,
                 currentChallenge.testCases
             );
@@ -105,7 +133,9 @@ export default function App() {
             setHasRun(true);
             setIsRunning(false);
 
-            // Smart transition: auto-switch to Run tab on mobile
+            // Auto-switch to Run tab on mobile after execution completes.
+            // This UX pattern ensures users immediately see their test results
+            // without manually switching tabs.
             setActiveMobileTab('run');
 
             const allPassed = testResults.length > 0 && testResults.every(r => r.passed);
@@ -119,7 +149,7 @@ export default function App() {
                 setFailedAttempts(prev => prev + 1);
             }
         }, 300);
-    }, [code, currentChallenge]);
+    }, [currentChallenge]); // No longer depends on `code` - uses codeRef instead
 
     // Handle code reset
     const handleReset = useCallback(() => {
@@ -178,11 +208,13 @@ export default function App() {
     }
 
     return (
-        <div className="h-screen flex flex-col md:flex-row bg-dark-900 overflow-hidden">
+        <div className={`h-screen flex flex-col md:flex-row overflow-hidden ${theme === 'dark' ? 'bg-dark-900' : 'bg-slate-50'
+            }`}>
             {/* Mobile Header */}
             <MobileHeader
                 onMenuToggle={() => setIsMobileMenuOpen(prev => !prev)}
                 isMenuOpen={isMobileMenuOpen}
+                theme={theme}
             />
 
             {/* Desktop Sidebar Toggle Button */}
@@ -201,29 +233,41 @@ export default function App() {
                 isCollapsed={isSidebarCollapsed}
                 isMobileOpen={isMobileMenuOpen}
                 onMobileClose={() => setIsMobileMenuOpen(false)}
+                theme={theme}
+                onThemeToggle={toggleTheme}
             />
 
-            {/* Main Content - with mobile header offset */}
-            <div className="flex-1 flex flex-col min-w-0 pt-14 md:pt-0">
+            {/* Main Content - with mobile header offset, min-h-0 needed for nested flexbox scrolling */}
+            <div className="flex-1 flex flex-col min-w-0 min-h-0 pt-14 md:pt-0">
                 {isLessonPhase ? (
                     /* LESSON PHASE: Vertical stack lesson view */
-                    <div className="flex-1 flex flex-col min-w-0 bg-gradient-to-br from-dark-900 via-dark-800 to-dark-900">
+                    <div className={`flex-1 flex flex-col min-w-0 min-h-0 ${theme === 'dark'
+                        ? 'bg-gradient-to-br from-dark-900 via-dark-800 to-dark-900'
+                        : 'bg-slate-50'
+                        }`}>
                         <LessonView
                             challenge={currentChallenge}
                             onLessonComplete={handleLessonComplete}
                             currentIndex={currentChallengeIndex}
                             totalChallenges={filteredChallenges.length}
+                            theme={theme}
                         />
                     </div>
                 ) : (
                     /* CHALLENGE PHASE */
-                    <div className="flex-1 flex flex-col min-w-0">
+                    <div className="flex-1 flex flex-col min-w-0 min-h-0">
                         {/* Header - visible on desktop, simplified on mobile */}
-                        <header className="glass-dark px-4 py-2.5 flex items-center justify-between shrink-0 border-b border-white/5">
+                        <header className={`px-4 py-2.5 flex items-center justify-between shrink-0 border-b ${theme === 'dark'
+                            ? 'glass-dark border-white/5'
+                            : 'bg-white border-slate-200 shadow-sm'
+                            }`}>
                             <div className="flex items-center gap-3">
                                 <button
                                     onClick={() => setIsLessonPhase(true)}
-                                    className="text-xs text-slate-500 hover:text-accent-purple transition-colors flex items-center gap-1 min-h-[44px] md:min-h-0"
+                                    className={`text-xs transition-colors flex items-center gap-1 min-h-[44px] md:min-h-0 ${theme === 'dark'
+                                        ? 'text-slate-500 hover:text-accent-purple'
+                                        : 'text-slate-500 hover:text-accent-purple'
+                                        }`}
                                 >
                                     <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
@@ -231,11 +275,12 @@ export default function App() {
                                     <span className="hidden md:inline">Back to Lesson</span>
                                     <span className="md:hidden">Lesson</span>
                                 </button>
-                                <span className="text-white/20 hidden md:inline">|</span>
+                                <span className={theme === 'dark' ? 'text-white/20' : 'text-slate-300'}>|</span>
                                 <span className="text-xs font-medium text-accent-cyan px-2 py-1 bg-accent-cyan/10 rounded border border-accent-cyan/20 hidden md:inline">
                                     {currentChallenge.category}
                                 </span>
-                                <h1 className="text-sm md:text-base font-semibold text-white truncate max-w-[150px] md:max-w-none">
+                                <h1 className={`text-sm md:text-base font-semibold truncate max-w-[150px] md:max-w-none ${theme === 'dark' ? 'text-white' : 'text-slate-900'
+                                    }`}>
                                     {currentChallenge.title}
                                 </h1>
                                 <span className={`text-xs font-medium px-2 py-0.5 rounded hidden md:inline ${currentChallenge.difficulty === 'Beginner' ? 'bg-accent-green/10 text-accent-green border border-accent-green/20' :
@@ -246,7 +291,8 @@ export default function App() {
                                     {currentChallenge.difficulty}
                                 </span>
                             </div>
-                            <div className="text-sm text-slate-400 font-mono">
+                            <div className={`text-sm font-mono ${theme === 'dark' ? 'text-slate-400' : 'text-slate-500'
+                                }`}>
                                 {currentChallengeIndex + 1} / {filteredChallenges.length}
                             </div>
                         </header>
@@ -262,6 +308,7 @@ export default function App() {
                                 failedAttempts={failedAttempts}
                                 showSolution={showSolution}
                                 onRevealSolution={() => setShowSolution(true)}
+                                theme={theme}
                             />
 
                             <Editor
@@ -273,13 +320,14 @@ export default function App() {
                                 isRunning={isRunning}
                                 allTestsPassed={hasRun && results.length > 0 && results.every(r => r.passed)}
                                 canGoNext={currentChallengeIndex < filteredChallenges.length - 1}
+                                theme={theme}
                             />
 
-                            <Console results={results} hasRun={hasRun} />
+                            <Console results={results} hasRun={hasRun} theme={theme} />
                         </main>
 
-                        {/* MOBILE: Tabbed Content */}
-                        <main className="md:hidden flex-1 overflow-hidden pb-16">
+                        {/* MOBILE: Tabbed Content - flex-1 min-h-0 for proper scrolling, pb-16 for tab bar clearance */}
+                        <main className="md:hidden flex-1 min-h-0 overflow-hidden pb-16">
                             {activeMobileTab === 'task' && (
                                 <div className="h-full overflow-y-auto scrollbar-hide">
                                     <ProblemCard
@@ -291,6 +339,7 @@ export default function App() {
                                         failedAttempts={failedAttempts}
                                         showSolution={showSolution}
                                         onRevealSolution={() => setShowSolution(true)}
+                                        theme={theme}
                                     />
                                 </div>
                             )}
@@ -306,13 +355,14 @@ export default function App() {
                                         isRunning={isRunning}
                                         allTestsPassed={hasRun && results.length > 0 && results.every(r => r.passed)}
                                         canGoNext={currentChallengeIndex < filteredChallenges.length - 1}
+                                        theme={theme}
                                     />
                                 </div>
                             )}
 
                             {activeMobileTab === 'run' && (
                                 <div className="h-full overflow-y-auto scrollbar-hide">
-                                    <Console results={results} hasRun={hasRun} />
+                                    <Console results={results} hasRun={hasRun} theme={theme} />
                                 </div>
                             )}
                         </main>
@@ -321,6 +371,7 @@ export default function App() {
                         <MobileTabBar
                             activeTab={activeMobileTab}
                             onTabChange={setActiveMobileTab}
+                            theme={theme}
                         />
                     </div>
                 )}

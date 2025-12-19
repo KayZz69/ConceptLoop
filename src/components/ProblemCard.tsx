@@ -10,6 +10,7 @@ interface ProblemCardProps {
     failedAttempts: number;
     showSolution: boolean;
     onRevealSolution: () => void;
+    theme?: 'dark' | 'light';
 }
 
 type TabType = 'task' | 'lesson';
@@ -22,7 +23,8 @@ export function ProblemCard({
     onNext,
     failedAttempts,
     showSolution,
-    onRevealSolution
+    onRevealSolution,
+    theme = 'dark'
 }: ProblemCardProps) {
     const [activeTab, setActiveTab] = useState<TabType>('task');
 
@@ -34,9 +36,15 @@ export function ProblemCard({
     };
 
     return (
-        <div className="h-full flex flex-col glass-dark border-r border-white/5 overflow-hidden">
+        <div className={`h-full flex flex-col border-r overflow-hidden ${theme === 'dark'
+                ? 'glass-dark border-white/5'
+                : 'bg-white border-slate-200'
+            }`}>
             {/* Header with Title */}
-            <div className="shrink-0 px-4 py-3 border-b border-white/5 bg-dark-800/50">
+            <div className={`shrink-0 px-4 py-3 border-b ${theme === 'dark'
+                    ? 'border-white/5 bg-dark-800/50'
+                    : 'border-slate-200 bg-slate-50'
+                }`}>
                 <div className="flex items-center justify-between mb-1">
                     <span className="text-[10px] font-medium text-slate-500 uppercase tracking-wider">
                         Challenge {currentIndex + 1} of {totalChallenges}
@@ -45,18 +53,19 @@ export function ProblemCard({
                         {challenge.difficulty}
                     </span>
                 </div>
-                <h1 className="text-lg font-semibold text-white leading-tight">
+                <h1 className={`text-lg font-semibold leading-tight ${theme === 'dark' ? 'text-white' : 'text-slate-900'
+                    }`}>
                     {challenge.title}
                 </h1>
             </div>
 
             {/* Tab Navigation */}
-            <div className="shrink-0 flex border-b border-white/5">
+            <div className={`shrink-0 flex border-b ${theme === 'dark' ? 'border-white/5' : 'border-slate-200'}`}>
                 <button
                     onClick={() => setActiveTab('task')}
                     className={`flex-1 px-4 py-2.5 text-xs font-medium transition-all relative ${activeTab === 'task'
-                            ? 'text-accent-cyan'
-                            : 'text-slate-500 hover:text-slate-300'
+                        ? 'text-accent-cyan'
+                        : 'text-slate-500 hover:text-slate-300'
                         }`}
                 >
                     📋 Task
@@ -67,8 +76,8 @@ export function ProblemCard({
                 <button
                     onClick={() => setActiveTab('lesson')}
                     className={`flex-1 px-4 py-2.5 text-xs font-medium transition-all relative ${activeTab === 'lesson'
-                            ? 'text-accent-purple'
-                            : 'text-slate-500 hover:text-slate-300'
+                        ? 'text-accent-purple'
+                        : 'text-slate-500 hover:text-slate-300'
                         }`}
                 >
                     📖 Lesson Review
@@ -94,7 +103,10 @@ export function ProblemCard({
             </div>
 
             {/* Navigation Footer */}
-            <div className="shrink-0 px-4 py-2.5 border-t border-white/5 bg-dark-800/50 flex justify-between">
+            <div className={`shrink-0 px-4 py-2.5 border-t flex justify-between ${theme === 'dark'
+                    ? 'border-white/5 bg-dark-800/50'
+                    : 'border-slate-200 bg-slate-50'
+                }`}>
                 <button
                     onClick={onPrevious}
                     disabled={currentIndex === 0}
@@ -175,8 +187,8 @@ function TaskTab({ challenge, failedAttempts, showSolution, onRevealSolution, on
                 </div>
             </div>
 
-            {/* SOLUTION - Shows after 3 failed attempts */}
-            {challenge.solution && (failedAttempts >= 3 || showSolution) && (
+            {/* SOLUTION - Shows after user clicks reveal */}
+            {challenge.solution && showSolution && (
                 <div className="border-b border-white/5 px-4 py-4 animate-fadeIn">
                     <div className="flex items-center gap-2 mb-3">
                         <span className="text-accent-green text-sm">✅</span>

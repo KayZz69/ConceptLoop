@@ -20,6 +20,11 @@ An interactive JavaScript learning platform with progressive lessons and coding 
 - **Challenge Completion** - Track your progress across categories
 - **Solution Reveal** - Access solutions after 3 failed attempts
 
+### Mobile Experience
+- **Responsive Design** - Native app-like experience on mobile
+- **Tabbed Interface** - Task/Code/Run tabs with fixed bottom navigation
+- **Touch Optimized** - 44px touch targets, safe area support for notched devices
+
 ## 📚 Categories
 
 | Category | Description |
@@ -67,6 +72,7 @@ npm run preview
 - **TypeScript** - Type safety
 - **Vite** - Build tool & dev server
 - **Tailwind CSS** - Utility-first styling
+- **Monaco Editor** - Code editor with syntax highlighting
 
 ## 📁 Project Structure
 
@@ -75,9 +81,11 @@ src/
 ├── components/
 │   ├── LessonView.tsx    # Progressive lesson wizard
 │   ├── ProblemCard.tsx   # Task & lesson reference tabs
-│   ├── Editor.tsx        # Code editor with syntax highlighting
+│   ├── Editor.tsx        # Monaco-based code editor
 │   ├── Console.tsx       # Test results display
-│   └── Sidebar.tsx       # Collapsible navigation
+│   ├── Sidebar.tsx       # Collapsible navigation
+│   ├── MobileHeader.tsx  # Fixed header with menu (mobile)
+│   └── MobileTabBar.tsx  # Bottom navigation (mobile)
 ├── data/
 │   └── challenges.ts     # 21 challenges with theory steps
 ├── utils/

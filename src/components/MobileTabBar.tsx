@@ -3,9 +3,10 @@ export type MobileTab = 'task' | 'code' | 'run';
 interface MobileTabBarProps {
     activeTab: MobileTab;
     onTabChange: (tab: MobileTab) => void;
+    theme?: 'dark' | 'light';
 }
 
-export function MobileTabBar({ activeTab, onTabChange }: MobileTabBarProps) {
+export function MobileTabBar({ activeTab, onTabChange, theme = 'dark' }: MobileTabBarProps) {
     const tabs: { id: MobileTab; label: string; icon: React.ReactNode }[] = [
         {
             id: 'task',
@@ -37,7 +38,8 @@ export function MobileTabBar({ activeTab, onTabChange }: MobileTabBarProps) {
     ];
 
     return (
-        <nav className="md:hidden fixed bottom-0 left-0 right-0 z-40 glass-dark border-t border-white/5 safe-area-bottom">
+        <nav className={`md:hidden fixed bottom-0 left-0 right-0 z-40 border-t safe-area-bottom ${theme === 'dark' ? 'glass-dark border-white/5' : 'bg-white border-slate-200 shadow-lg'
+            }`}>
             <div className="flex">
                 {tabs.map((tab) => {
                     const isActive = activeTab === tab.id;

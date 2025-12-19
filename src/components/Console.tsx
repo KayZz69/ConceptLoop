@@ -3,17 +3,22 @@ import { TestResult, formatValue } from '../utils/runCode';
 interface ConsoleProps {
     results: TestResult[];
     hasRun: boolean;
+    theme?: 'dark' | 'light';
 }
 
-export function Console({ results, hasRun }: ConsoleProps) {
+export function Console({ results, hasRun, theme = 'dark' }: ConsoleProps) {
     const passedCount = results.filter(r => r.passed).length;
     const totalCount = results.length;
     const allPassed = passedCount === totalCount && totalCount > 0;
 
     return (
-        <div className="h-full flex flex-col glass-dark">
+        <div className={`h-full flex flex-col ${theme === 'dark' ? 'glass-dark' : 'bg-white border-l border-slate-200'
+            }`}>
             {/* Header */}
-            <div className="px-4 py-3 border-b border-white/5 flex items-center justify-between bg-dark-800/50">
+            <div className={`px-4 py-3 border-b flex items-center justify-between ${theme === 'dark'
+                ? 'border-white/5 bg-dark-800/50'
+                : 'border-slate-200 bg-slate-50'
+                }`}>
                 <span className="text-xs font-medium text-slate-400 flex items-center gap-2">
                     <svg
                         className="w-4 h-4 text-accent-purple"
@@ -44,7 +49,8 @@ export function Console({ results, hasRun }: ConsoleProps) {
                 {!hasRun ? (
                     <div className="h-full flex items-center justify-center">
                         <div className="text-center text-slate-500">
-                            <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-dark-600/50 flex items-center justify-center">
+                            <div className={`w-16 h-16 mx-auto mb-4 rounded-full flex items-center justify-center ${theme === 'dark' ? 'bg-dark-600/50' : 'bg-slate-100'
+                                }`}>
                                 <svg
                                     className="w-8 h-8 text-accent-purple/50"
                                     fill="none"
@@ -80,7 +86,8 @@ export function Console({ results, hasRun }: ConsoleProps) {
                         </p>
                     </div>
                 ) : (
-                    <div className="mb-4 p-4 glass rounded-xl animate-fadeIn">
+                    <div className={`mb-4 p-4 rounded-xl animate-fadeIn ${theme === 'dark' ? 'glass' : 'bg-slate-50 border border-slate-200'
+                        }`}>
                         <div className="flex items-center gap-2 text-slate-300 font-medium mb-1">
                             <span className="text-lg">🤔</span>
                             Not quite right yet...
@@ -93,7 +100,7 @@ export function Console({ results, hasRun }: ConsoleProps) {
 
                 <div className="space-y-3">
                     {results.map((result, index) => (
-                        <TestResultCard key={index} result={result} index={index} />
+                        <TestResultCard key={index} result={result} index={index} theme={theme} />
                     ))}
                 </div>
             </div>
@@ -104,9 +111,10 @@ export function Console({ results, hasRun }: ConsoleProps) {
 interface TestResultCardProps {
     result: TestResult;
     index: number;
+    theme: 'dark' | 'light';
 }
 
-function TestResultCard({ result, index }: TestResultCardProps) {
+function TestResultCard({ result, index, theme }: TestResultCardProps) {
     return (
         <div
             className={`p-4 rounded-xl animate-slideIn ${result.passed
@@ -171,7 +179,8 @@ function TestResultCard({ result, index }: TestResultCardProps) {
             )}
 
             {/* Expected vs Received */}
-            <div className="space-y-1 font-mono text-xs mt-3 p-3 bg-dark-900/50 rounded-lg">
+            <div className={`space-y-1 font-mono text-xs mt-3 p-3 rounded-lg ${theme === 'dark' ? 'bg-dark-900/50' : 'bg-slate-50 border border-slate-100'
+                }`}>
                 <div className="flex">
                     <span className="text-slate-500 w-20">Expected:</span>
                     <span className={result.passed ? 'text-accent-green' : 'text-slate-300'}>

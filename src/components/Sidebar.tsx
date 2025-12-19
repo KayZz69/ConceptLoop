@@ -10,6 +10,9 @@ interface SidebarProps {
     // Mobile-specific props
     isMobileOpen?: boolean;
     onMobileClose?: () => void;
+    // Theme props
+    theme: 'dark' | 'light';
+    onThemeToggle: () => void;
 }
 
 export function Sidebar({
@@ -20,7 +23,9 @@ export function Sidebar({
     completedChallenges,
     isCollapsed,
     isMobileOpen = false,
-    onMobileClose
+    onMobileClose,
+    theme,
+    onThemeToggle
 }: SidebarProps) {
     // Count challenges per category
     const getChallengeCount = (category: Category): number => {
@@ -57,25 +62,30 @@ export function Sidebar({
     const sidebarContent = (
         <>
             {/* Header - Logo */}
-            <div className="px-4 py-4 border-b border-white/5 shrink-0">
+            <div className={`px-4 py-4 border-b shrink-0 ${theme === 'dark' ? 'border-white/5' : 'border-slate-200'
+                }`}>
                 <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2.5">
                         <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-accent-cyan to-accent-purple flex items-center justify-center shadow-glow-cyan shrink-0">
                             <span className="text-dark-900 font-bold text-xs">CL</span>
                         </div>
                         <div className="overflow-hidden whitespace-nowrap">
-                            <span className="font-semibold text-sm text-white">ConceptLoop</span>
-                            <p className="text-[10px] text-slate-500">Master JavaScript</p>
+                            <span className={`font-semibold text-sm ${theme === 'dark' ? 'text-white' : 'text-slate-900'
+                                }`}>ConceptLoop</span>
+                            <p className={`text-[10px] ${theme === 'dark' ? 'text-slate-500' : 'text-slate-500'
+                                }`}>Master JavaScript</p>
                         </div>
                     </div>
                     {/* Mobile close button */}
                     {isMobileOpen && onMobileClose && (
                         <button
                             onClick={onMobileClose}
-                            className="md:hidden p-2 -mr-2 rounded-lg hover:bg-dark-500/50 transition-colors"
+                            className={`md:hidden p-2 -mr-2 rounded-lg transition-colors ${theme === 'dark' ? 'hover:bg-dark-500/50' : 'hover:bg-slate-100'
+                                }`}
                             aria-label="Close menu"
                         >
-                            <svg className="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <svg className={`w-5 h-5 ${theme === 'dark' ? 'text-slate-400' : 'text-slate-600'
+                                }`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                             </svg>
                         </button>
@@ -84,14 +94,17 @@ export function Sidebar({
             </div>
 
             {/* Progress */}
-            <div className="px-4 py-3 border-b border-white/5 shrink-0">
+            <div className={`px-4 py-3 border-b shrink-0 ${theme === 'dark' ? 'border-white/5' : 'border-slate-200'
+                }`}>
                 <div className="flex items-center justify-between mb-2">
-                    <span className="text-[10px] font-medium text-slate-500 uppercase tracking-wider">Progress</span>
+                    <span className={`text-[10px] font-medium uppercase tracking-wider ${theme === 'dark' ? 'text-slate-500' : 'text-slate-500'
+                        }`}>Progress</span>
                     <span className="text-xs font-mono text-accent-cyan">
                         {currentChallengeIndex + 1}/{filteredChallengesCount}
                     </span>
                 </div>
-                <div className="h-1.5 bg-dark-600 rounded-full overflow-hidden">
+                <div className={`h-1.5 rounded-full overflow-hidden ${theme === 'dark' ? 'bg-dark-600' : 'bg-slate-200'
+                    }`}>
                     <div
                         className="h-full bg-gradient-to-r from-accent-cyan to-accent-purple rounded-full transition-all duration-500 ease-out"
                         style={{ width: `${((currentChallengeIndex + 1) / filteredChallengesCount) * 100}%` }}
@@ -102,7 +115,8 @@ export function Sidebar({
             {/* Categories */}
             <div className="flex-1 overflow-y-auto py-3 scrollbar-hide">
                 <div className="px-3">
-                    <div className="text-[10px] font-medium text-slate-500 uppercase tracking-wider mb-2 px-2">
+                    <div className={`text-[10px] font-medium uppercase tracking-wider mb-2 px-2 ${theme === 'dark' ? 'text-slate-500' : 'text-slate-500'
+                        }`}>
                         Categories
                     </div>
 
@@ -112,7 +126,9 @@ export function Sidebar({
                         className={`w-full flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-xs font-medium transition-all mb-1 min-h-[44px]
                             ${selectedCategory === null
                                 ? 'bg-gradient-to-r from-accent-cyan/20 to-accent-purple/10 text-white border border-accent-cyan/30 shadow-glow-cyan'
-                                : 'text-slate-400 hover:bg-dark-500/50 hover:text-white border border-transparent'
+                                : theme === 'dark'
+                                    ? 'text-slate-400 hover:bg-dark-500/50 hover:text-white border border-transparent'
+                                    : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900 border border-transparent'
                             }`}
                     >
                         <span className="text-base shrink-0">📚</span>
@@ -135,7 +151,9 @@ export function Sidebar({
                                 className={`w-full flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-xs font-medium transition-all mb-1 min-h-[44px]
                                     ${selectedCategory === category
                                         ? 'bg-gradient-to-r from-accent-cyan/20 to-accent-purple/10 text-white border border-accent-cyan/30 shadow-glow-cyan'
-                                        : 'text-slate-400 hover:bg-dark-500/50 hover:text-white border border-transparent'
+                                        : theme === 'dark'
+                                            ? 'text-slate-400 hover:bg-dark-500/50 hover:text-white border border-transparent'
+                                            : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900 border border-transparent'
                                     }`}
                             >
                                 <span className="text-base shrink-0">{categoryIcons[category]}</span>
@@ -151,14 +169,35 @@ export function Sidebar({
                 </div>
             </div>
 
-            {/* Footer */}
-            <div className="px-4 py-3 border-t border-white/5 shrink-0">
-                <div className="text-[10px] text-slate-600 text-center whitespace-nowrap">
-                    <span className="gradient-text font-medium">Learn</span>
-                    <span className="text-slate-600"> • </span>
-                    <span className="gradient-text font-medium">Practice</span>
-                    <span className="text-slate-600"> • </span>
-                    <span className="gradient-text font-medium">Master</span>
+            {/* Footer with Theme Toggle */}
+            <div className={`px-4 py-3 border-t shrink-0 ${theme === 'dark' ? 'border-white/5' : 'border-slate-200'
+                }`}>
+                <div className="flex items-center justify-between">
+                    <div className={`text-[10px] whitespace-nowrap ${theme === 'dark' ? 'text-slate-600' : 'text-slate-500'
+                        }`}>
+                        <span className="gradient-text font-medium">Learn</span>
+                        <span className={theme === 'dark' ? 'text-slate-600' : 'text-slate-400'}> • </span>
+                        <span className="gradient-text font-medium">Practice</span>
+                        <span className={theme === 'dark' ? 'text-slate-600' : 'text-slate-400'}> • </span>
+                        <span className="gradient-text font-medium">Master</span>
+                    </div>
+                    {/* Theme Toggle Button */}
+                    <button
+                        onClick={onThemeToggle}
+                        className="theme-toggle"
+                        title={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
+                        aria-label={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
+                    >
+                        {theme === 'dark' ? (
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" className="text-accent-amber">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+                            </svg>
+                        ) : (
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" className="text-accent-purple">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+                            </svg>
+                        )}
+                    </button>
                 </div>
             </div>
         </>
@@ -168,8 +207,10 @@ export function Sidebar({
         <>
             {/* Desktop Sidebar - persistent */}
             <aside
-                className={`hidden md:flex glass-dark flex-col h-full border-r border-white/5 transition-all duration-300 overflow-hidden ${isCollapsed ? 'w-0' : 'w-56'
-                    }`}
+                className={`hidden md:flex flex-col h-full border-r transition-all duration-300 overflow-hidden ${theme === 'dark'
+                    ? 'glass-dark border-white/5'
+                    : 'bg-slate-50 border-slate-200'
+                    } ${isCollapsed ? 'w-0' : 'w-56'}`}
             >
                 {sidebarContent}
             </aside>
@@ -183,7 +224,8 @@ export function Sidebar({
                         onClick={onMobileClose}
                     />
                     {/* Sidebar */}
-                    <aside className="md:hidden fixed top-0 left-0 bottom-0 z-50 w-72 glass-dark flex flex-col animate-slideInFromLeft">
+                    <aside className={`md:hidden fixed top-0 left-0 bottom-0 z-50 w-72 flex flex-col animate-slideInFromLeft ${theme === 'dark' ? 'glass-dark' : 'bg-slate-50 shadow-lg'
+                        }`}>
                         {sidebarContent}
                     </aside>
                 </>
