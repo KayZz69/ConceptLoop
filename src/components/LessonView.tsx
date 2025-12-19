@@ -99,28 +99,28 @@ export function LessonView({ challenge, onLessonComplete, currentIndex, totalCha
 
     return (
         <div className="flex-1 flex flex-col overflow-hidden">
-            {/* Fixed header */}
-            <div className="shrink-0 px-8 py-4 border-b border-white/5 bg-dark-900/80 backdrop-blur-sm">
+            {/* Fixed header - responsive padding */}
+            <div className="shrink-0 px-4 md:px-8 py-3 md:py-4 border-b border-white/5 bg-dark-900/80 backdrop-blur-sm">
                 <div className="max-w-2xl mx-auto">
-                    <div className="flex items-center justify-between mb-3">
-                        <div className="flex items-center gap-3">
+                    <div className="flex items-center justify-between mb-2 md:mb-3">
+                        <div className="flex items-center gap-2 md:gap-3">
                             <span className="text-xs text-slate-500">
                                 {challenge.category}
                             </span>
-                            <span className="text-white/20">•</span>
-                            <span className={`text-xs ${difficultyColors[challenge.difficulty]}`}>
+                            <span className="text-white/20 hidden md:inline">•</span>
+                            <span className={`text-xs ${difficultyColors[challenge.difficulty]} hidden md:inline`}>
                                 {challenge.difficulty}
                             </span>
                         </div>
                         <span className="text-xs text-slate-500">
-                            Challenge {currentIndex + 1} of {totalChallenges}
+                            {currentIndex + 1} / {totalChallenges}
                         </span>
                     </div>
-                    <h1 className="text-2xl font-bold text-white mb-3">
+                    <h1 className="text-xl md:text-2xl font-bold text-white mb-2 md:mb-3">
                         {challenge.title}
                     </h1>
                     {/* Progress bar */}
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-1 md:gap-2">
                         {steps.map((_, idx) => (
                             <div
                                 key={idx}
@@ -134,12 +134,12 @@ export function LessonView({ challenge, onLessonComplete, currentIndex, totalCha
                 </div>
             </div>
 
-            {/* Scrollable vertical stack */}
+            {/* Scrollable vertical stack - responsive padding */}
             <div
                 ref={containerRef}
-                className="flex-1 overflow-y-auto px-8 py-12"
+                className="flex-1 overflow-y-auto px-4 md:px-8 py-6 md:py-12 scrollbar-hide"
             >
-                <div className="max-w-2xl mx-auto space-y-16">
+                <div className="max-w-2xl mx-auto space-y-8 md:space-y-16">
                     {visibleSteps.map((step, idx) => {
                         const isCompleted = idx < stepIndex;
                         const isCurrent = idx === stepIndex;
@@ -166,13 +166,13 @@ export function LessonView({ challenge, onLessonComplete, currentIndex, totalCha
                         );
                     })}
 
-                    {/* Navigation at bottom */}
-                    <div className="pt-8 pb-32">
-                        <div className="flex items-center justify-between">
+                    {/* Navigation at bottom - touch-friendly */}
+                    <div className="pt-6 md:pt-8 pb-24 md:pb-32">
+                        <div className="flex items-center justify-between gap-4">
                             <button
                                 onClick={handleBack}
                                 disabled={stepIndex === 0}
-                                className={`px-5 py-2.5 text-sm font-medium rounded-xl transition-all duration-200 flex items-center gap-2 ${stepIndex === 0
+                                className={`px-4 md:px-5 py-3 md:py-2.5 text-sm font-medium rounded-xl transition-all duration-200 flex items-center gap-2 min-h-[44px] ${stepIndex === 0
                                     ? 'text-slate-600 cursor-not-allowed'
                                     : 'text-slate-400 hover:text-white hover:bg-dark-600/50'
                                     }`}
@@ -186,7 +186,7 @@ export function LessonView({ challenge, onLessonComplete, currentIndex, totalCha
                             <button
                                 onClick={handleContinue}
                                 disabled={!canContinue}
-                                className={`px-8 py-3.5 text-base font-semibold rounded-xl transition-all duration-200 flex items-center gap-3 ${canContinue
+                                className={`flex-1 md:flex-none px-6 md:px-8 py-3 md:py-3.5 text-base font-semibold rounded-xl transition-all duration-200 flex items-center justify-center gap-2 md:gap-3 min-h-[44px] ${canContinue
                                     ? 'bg-accent-purple text-white hover:bg-accent-purple/90 shadow-lg shadow-accent-purple/20'
                                     : 'bg-dark-600 text-slate-500 cursor-not-allowed'
                                     }`}
@@ -208,11 +208,11 @@ export function LessonView({ challenge, onLessonComplete, currentIndex, totalCha
                 </div>
             </div>
 
-            {/* Skip lesson link - fixed at bottom */}
-            <div className="shrink-0 py-3 text-center border-t border-white/5 bg-dark-900/80">
+            {/* Skip lesson link - fixed at bottom, touch-friendly */}
+            <div className="shrink-0 py-2 md:py-3 text-center border-t border-white/5 bg-dark-900/80">
                 <button
                     onClick={onLessonComplete}
-                    className="text-xs text-slate-600 hover:text-slate-400 transition-colors"
+                    className="text-xs text-slate-600 hover:text-slate-400 transition-colors py-2 px-4 min-h-[44px]"
                 >
                     Skip to challenge →
                 </button>
@@ -235,12 +235,12 @@ interface StepCardProps {
 
 function StepCard({ step, stepNumber, totalSteps, isCurrent, hasRun, output, isRunning, onRunCode }: StepCardProps) {
     return (
-        <div className={`glass rounded-2xl overflow-hidden transition-all duration-300 ${isCurrent ? 'ring-2 ring-accent-purple/50' : ''
+        <div className={`glass rounded-xl md:rounded-2xl overflow-hidden transition-all duration-300 ${isCurrent ? 'ring-2 ring-accent-purple/50' : ''
             }`}>
-            {/* Step header */}
-            <div className="px-6 py-4 bg-gradient-to-r from-accent-purple/10 to-transparent border-b border-white/5">
-                <div className="flex items-center gap-3">
-                    <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold ${hasRun || !step.runnable ? 'bg-accent-green/20 text-accent-green' : 'bg-accent-purple/20 text-accent-purple'
+            {/* Step header - responsive padding */}
+            <div className="px-4 md:px-6 py-3 md:py-4 bg-gradient-to-r from-accent-purple/10 to-transparent border-b border-white/5">
+                <div className="flex items-center gap-2 md:gap-3">
+                    <div className={`w-7 h-7 md:w-8 md:h-8 rounded-full flex items-center justify-center text-sm font-bold ${hasRun || !step.runnable ? 'bg-accent-green/20 text-accent-green' : 'bg-accent-purple/20 text-accent-purple'
                         }`}>
                         {hasRun || !step.runnable ? '✓' : stepNumber}
                     </div>
@@ -250,16 +250,16 @@ function StepCard({ step, stepNumber, totalSteps, isCurrent, hasRun, output, isR
                 </div>
             </div>
 
-            {/* Step content */}
-            <div className="px-6 py-6">
-                <p className="text-lg text-slate-200 leading-relaxed">
+            {/* Step content - responsive padding and typography */}
+            <div className="px-4 md:px-6 py-4 md:py-6">
+                <p className="text-base md:text-lg text-slate-200 leading-relaxed">
                     {renderText(step.text)}
                 </p>
 
                 {/* Code example */}
                 {step.codeExample && (
-                    <div className="mt-6">
-                        <pre className="code-editor rounded-xl px-5 py-4 overflow-x-auto font-mono text-sm leading-relaxed text-accent-cyan">
+                    <div className="mt-4 md:mt-6">
+                        <pre className="code-editor rounded-lg md:rounded-xl px-4 md:px-5 py-3 md:py-4 overflow-x-auto font-mono text-[14px] md:text-sm leading-relaxed text-accent-cyan">
                             <code>{step.codeExample}</code>
                         </pre>
 
@@ -268,7 +268,7 @@ function StepCard({ step, stepNumber, totalSteps, isCurrent, hasRun, output, isR
                                 <button
                                     onClick={onRunCode}
                                     disabled={isRunning || hasRun}
-                                    className={`px-6 py-3 text-sm font-semibold rounded-xl transition-all duration-200 flex items-center gap-3 ${hasRun
+                                    className={`px-5 md:px-6 py-3 text-sm font-semibold rounded-xl transition-all duration-200 flex items-center gap-2 md:gap-3 min-h-[44px] ${hasRun
                                         ? 'bg-accent-green/20 text-accent-green border border-accent-green/30'
                                         : 'bg-accent-amber text-dark-900 hover:bg-accent-amber/90 shadow-lg shadow-accent-amber/20'
                                         }`}
@@ -293,14 +293,14 @@ function StepCard({ step, stepNumber, totalSteps, isCurrent, hasRun, output, isR
                             </div>
                         )}
 
-                        {/* Console output - show actual values */}
+                        {/* Console output - show actual values, responsive sizing */}
                         {output && (
-                            <div className="mt-4 bg-dark-900/80 rounded-xl px-5 py-4 border border-accent-cyan/20 animate-fadeIn">
+                            <div className="mt-4 bg-dark-900/80 rounded-lg md:rounded-xl px-4 md:px-5 py-3 md:py-4 border border-accent-cyan/20 animate-fadeIn">
                                 <div className="text-xs text-slate-500 uppercase tracking-wider mb-2 flex items-center gap-2">
                                     <span className="w-2 h-2 bg-accent-cyan rounded-full animate-pulse" />
                                     Output
                                 </div>
-                                <pre className="font-mono text-base text-accent-cyan whitespace-pre-wrap">
+                                <pre className="font-mono text-sm md:text-base text-accent-cyan whitespace-pre-wrap">
                                     {output}
                                 </pre>
                             </div>

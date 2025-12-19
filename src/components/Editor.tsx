@@ -65,7 +65,7 @@ export function Editor({
                     <button
                         onClick={onReset}
                         className="px-3 py-1.5 text-xs font-medium text-slate-400 hover:text-white 
-                       hover:bg-dark-500/50 rounded-lg transition-all border border-transparent hover:border-white/10"
+                       hover:bg-dark-500/50 rounded-lg transition-all border border-transparent hover:border-white/10 min-h-[44px] md:min-h-0"
                     >
                         Reset
                     </button>
@@ -73,7 +73,7 @@ export function Editor({
                     <button
                         onClick={onRun}
                         disabled={isRunning}
-                        className="btn-primary px-4 py-1.5 text-xs rounded-lg
+                        className="btn-primary px-4 py-1.5 text-xs rounded-lg min-h-[44px] md:min-h-0
                        disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none
                        flex items-center gap-2"
                     >
@@ -134,8 +134,8 @@ export function Editor({
                 />
             </div>
 
-            {/* Editor Footer - Keyboard hints */}
-            <div className="px-3 py-2 border-t border-white/5 bg-dark-800/60 flex items-center justify-between shrink-0">
+            {/* Editor Footer - Keyboard hints (hidden on mobile) */}
+            <div className="hidden md:flex px-3 py-2 border-t border-white/5 bg-dark-800/60 items-center justify-between shrink-0">
                 <span className="text-[10px] text-slate-500 flex items-center gap-3">
                     <span className="flex items-center gap-1">
                         <kbd className="px-1.5 py-0.5 bg-dark-600 rounded text-[10px] text-slate-400 border border-white/10">Tab</kbd>

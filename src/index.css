@@ -260,3 +260,55 @@ textarea::selection {
 .animate-pulse-glow {
   animation: pulse-glow 2s ease-in-out infinite;
 }
+
+/* ============================================
+   MOBILE UTILITIES
+   ============================================ */
+
+/* Hide scrollbars on mobile for cleaner UI */
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Mobile backdrop overlay */
+.backdrop-overlay {
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+/* Ensure minimum touch target size (44px as per Apple HIG) */
+.touch-target {
+  min-height: 44px;
+  min-width: 44px;
+}
+
+/* Safe area for bottom navigation on notched devices */
+.safe-area-bottom {
+  padding-bottom: env(safe-area-inset-bottom, 0);
+}
+
+/* Mobile-specific code editor sizing */
+@media (max-width: 767px) {
+  .code-editor textarea {
+    font-size: 16px !important; /* Prevent iOS auto-zoom */
+  }
+  
+  pre code, .font-mono {
+    font-size: 14px;
+  }
+}
+
+/* Slide-in animation for mobile sidebar */
+@keyframes slideInFromLeft {
+  from { transform: translateX(-100%); }
+  to { transform: translateX(0); }
+}
+
+.animate-slideInFromLeft {
+  animation: slideInFromLeft 0.3s ease-out;
+}
