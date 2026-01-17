@@ -29,6 +29,9 @@ All application state lives in `App.tsx` and flows down via props:
 | `completedChallenges` | Persisted to localStorage |
 | `theme` | Dark/light mode, persisted to localStorage |
 
+Local persistence uses `localStorage` keys:
+`conceptLoop_completed`, `conceptLoop_theme`, and `conceptLoop_code_<challengeId>`.
+
 ## Data Flow
 
 ```
@@ -68,12 +71,21 @@ All application state lives in `App.tsx` and flows down via props:
 | `@monaco-editor/react` | Code editor with syntax highlighting |
 | `tailwindcss` | Utility-first CSS framework |
 | `vite` | Build tool and dev server |
+| `vite-plugin-pwa` | Service worker registration and caching |
 
 ## Key Patterns
 
-### Sandboxed Code Execution
-User code runs via `new Function()` with a custom console object to capture logs.
-This provides isolation from the main app while running in browser context.
+### Challenge Code Execution (runCode)
+Challenge solutions run via `new Function()` with a custom console object in
+`runCode.ts`. This captures logs and provides lightweight isolation in-browser.
+
+### Lesson Step Execution (LessonView)
+Lesson snippets run via `eval()` with a temporary `console.log` override to
+capture output for display. This is separate from `runCode.ts`.
+
+### PWA Caching
+The app registers a service worker (via `vite-plugin-pwa`) and caches static
+assets and Google Fonts for offline-ready load performance.
 
 ### Continuous Scroll (Lesson View)
 Previous steps remain visible but dimmed. Uses refs to track step elements and

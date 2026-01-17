@@ -73,6 +73,7 @@ npm run preview
 - **Vite** - Build tool & dev server
 - **Tailwind CSS** - Utility-first styling
 - **Monaco Editor** - Code editor with syntax highlighting
+- **PWA (vite-plugin-pwa)** - Service worker + offline caching
 
 ## 📁 Project Structure
 
@@ -94,6 +95,16 @@ src/
 ├── index.css             # Global styles & animations
 └── main.tsx              # Entry point
 ```
+
+## 🤖 Agent Rules
+
+This repo includes agent rules for contributors and automated assistants.
+See the files in `.agent/rules/` for the current policies:
+
+- `code-style.md` - style and architecture boundaries
+- `documentation-rules.md` - documentation expectations
+- `safety-and-scope.md` - scope and safe command guidance
+- `testing.md` - testing requirements
 
 ## 📄 License
 
