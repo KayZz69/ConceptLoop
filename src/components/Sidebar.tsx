@@ -41,13 +41,13 @@ export function Sidebar({
 
     // Category icons
     const categoryIcons: Record<Category, string> = {
-        'JS Basics': '⚡',
-        'Conditionals': '🔀',
-        'Loops': '🔄',
-        'Functions': '📦',
-        'Strings': '✨',
-        'Arrays': '📊',
-        'Objects': '🔮'
+        'Essentials': '⚡',
+        'Decisions & Validation': '✅',
+        'Loops & Aggregation': '🔁',
+        'Functions & Reuse': '🧩',
+        'Data Shaping': '🧱',
+        'Strings & Parsing': '🔤',
+        'Mini Projects': '🚀'
     };
 
     // Handle category selection (close mobile menu on selection)

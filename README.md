@@ -29,13 +29,13 @@ An interactive JavaScript learning platform with progressive lessons and coding 
 
 | Category | Description |
 |----------|-------------|
-| JS Basics | Variables, operators, console.log |
-| Conditionals | if/else, ternary operators, comparisons |
-| Loops | for, while, iteration patterns |
-| Functions | Arrow functions, callbacks, parameters |
-| Strings | String methods and manipulation |
-| Arrays | Array methods, map, filter, reduce |
-| Objects | Object access, properties, methods |
+| Essentials | Everyday values, strings, and calculations |
+| Decisions & Validation | Rules, thresholds, and guard checks |
+| Loops & Aggregation | Counting, totals, and averages |
+| Functions & Reuse | Defaults, callbacks, and safe utilities |
+| Data Shaping | Arrays and objects for structured data |
+| Strings & Parsing | Cleaning, extracting, and formatting text |
+| Mini Projects | Applied summaries and multi-step tasks |
 
 ## 🚀 Getting Started
 

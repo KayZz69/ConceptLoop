@@ -1,6 +1,13 @@
 // Challenge data types and static repository - Category-Based Architecture
 
-export type Category = 'JS Basics' | 'Conditionals' | 'Loops' | 'Functions' | 'Strings' | 'Arrays' | 'Objects';
+export type Category =
+  | 'Essentials'
+  | 'Decisions & Validation'
+  | 'Loops & Aggregation'
+  | 'Functions & Reuse'
+  | 'Data Shaping'
+  | 'Strings & Parsing'
+  | 'Mini Projects';
 
 export interface TestCase {
   input: any[];
@@ -8,11 +15,11 @@ export interface TestCase {
   description?: string;
 }
 
-// NEW: Step-based theory for progressive disclosure
+// Step-based theory for progressive disclosure
 export interface TheoryStep {
-  text: string;           // The explanation text for this step
-  codeExample?: string;   // Optional interactive code snippet
-  runnable?: boolean;     // If true, show "Run Code" button
+  text: string; // The explanation text for this step
+  codeExample?: string; // Optional interactive code snippet
+  runnable?: boolean; // If true, show "Run Code" button
 }
 
 export interface Challenge {
@@ -20,742 +27,757 @@ export interface Challenge {
   title: string;
   category: Category;
   difficulty: 'Beginner' | 'Easy' | 'Medium' | 'Hard';
-  theorySteps: TheoryStep[]; // Changed from theory: string to step-based
+  theorySteps: TheoryStep[];
   hint: string;
   description: string;
   examples: string[];
   starterCode: string;
   functionName: string;
   testCases: TestCase[];
-  solution?: string; // Revealed after 3 failed attempts
+  solution?: string;
 }
 
-export const categories: Category[] = ['JS Basics', 'Conditionals', 'Loops', 'Functions', 'Strings', 'Arrays', 'Objects'];
+export const categories: Category[] = [
+  'Essentials',
+  'Decisions & Validation',
+  'Loops & Aggregation',
+  'Functions & Reuse',
+  'Data Shaping',
+  'Strings & Parsing',
+  'Mini Projects'
+];
 
 export const challenges: Challenge[] = [
   // ============================================
-  // CATEGORY: JS BASICS
+  // CATEGORY: ESSENTIALS
   // ============================================
   {
-    id: 'js-variables',
-    title: 'Variables',
-    category: 'JS Basics',
+    id: 'essentials-greeting',
+    title: 'Personalized Greeting',
+    category: 'Essentials',
     difficulty: 'Beginner',
     theorySteps: [
-      { text: "A **variable** is a named container that stores data. Think of it as a labeled box where you can put information." },
-      { text: "In JavaScript, we use `const` to declare variables that won't change.", codeExample: 'const greeting = "Hello";', runnable: true },
-      { text: "The pattern is: `const` + **name** + `=` + **value**", codeExample: 'const age = 25;\nconst isActive = true;', runnable: true },
-      { text: "Variable names are case-sensitive, so `myVar` and `myvar` are different variables." },
-      { text: "To use a stored value, simply write the variable name. Try it:", codeExample: 'const message = "Hi there!";\nconsole.log(message);', runnable: true }
+      { text: 'Functions take inputs (parameters) and return a result.' },
+      {
+        text: 'Template literals make it easy to insert values into strings:',
+        codeExample: 'const name = "Sam";\nconst message = `Hello, ${name}!`;\nconsole.log(message);',
+        runnable: true
+      },
+      { text: 'Return the final message from your function.' }
     ],
-    hint: 'Declare a variable with const, assign a string value, and use return to send it back.',
-    description: 'Assign the value `"JavaScript"` to a variable named `course` and return it.',
+    hint: 'Build the message with the name and return it.',
+    description: 'Return the string "Hello, {name}!" for the given name.',
     examples: [
-      'getCourse() → "JavaScript"'
+      'greetUser("Sam") -> "Hello, Sam!"',
+      'greetUser("Ava") -> "Hello, Ava!"'
     ],
-    starterCode: `function getCourse() {
-  // Create a variable called 'course' with value "JavaScript"
-  // Then return it
-  
+    starterCode: `function greetUser(name) {
+  // Return "Hello, {name}!"
+
 }`,
-    functionName: 'getCourse',
+    functionName: 'greetUser',
     testCases: [
-      { input: [], expected: "JavaScript", description: "Should return JavaScript" }
+      { input: ['Sam'], expected: 'Hello, Sam!', description: 'Basic name' },
+      { input: ['Ava'], expected: 'Hello, Ava!', description: 'Another name' }
     ],
-    solution: `function getCourse() {
-  const course = "JavaScript";
-  return course;
+    solution: `function greetUser(name) {
+  return \`Hello, \${name}!\`;
 }`
   },
   {
-    id: 'js-sum',
-    title: 'Sum Two Numbers',
-    category: 'JS Basics',
-    difficulty: 'Beginner',
+    id: 'essentials-total-with-tax',
+    title: 'Total with Tax',
+    category: 'Essentials',
+    difficulty: 'Easy',
     theorySteps: [
-      { text: "JavaScript can perform mathematical calculations using **arithmetic operators**." },
-      { text: "The `+` operator adds numbers, `-` subtracts, `*` multiplies, and `/` divides.", codeExample: 'console.log(5 + 3);  // 8\nconsole.log(10 - 4); // 6', runnable: true },
-      { text: "When a function receives inputs (called **parameters**), you can use them in calculations.", codeExample: 'function multiply(x, y) {\n  return x * y;\n}\nconsole.log(multiply(4, 5));', runnable: true },
-      { text: "The parameters are filled with values when you call the function. You can use any operator with them." }
+      { text: 'A tax rate is a decimal (25% is 0.25).' },
+      {
+        text: 'Compute the tax amount with multiplication:',
+        codeExample: 'const price = 100;\nconst taxRate = 0.25;\nconst total = price + price * taxRate;\nconsole.log(total);',
+        runnable: true
+      },
+      { text: 'Return the total price after tax.' }
     ],
-    hint: 'Think about which operator combines two values into a total.',
-    description: 'Return the sum of parameters `a` and `b`.',
+    hint: 'Total = price + (price * taxRate).',
+    description: 'Return the total price after applying taxRate.',
     examples: [
-      'sum(2, 3) → 5',
-      'sum(10, -5) → 5'
+      'totalWithTax(100, 0.25) -> 125',
+      'totalWithTax(80, 0.5) -> 120'
     ],
-    starterCode: `function sum(a, b) {
-  // Return the sum of a and b
-  
+    starterCode: `function totalWithTax(price, taxRate) {
+  // Return price after adding tax
+
 }`,
-    functionName: 'sum',
+    functionName: 'totalWithTax',
     testCases: [
-      { input: [2, 3], expected: 5, description: 'Basic addition' },
-      { input: [10, -5], expected: 5, description: 'With negative number' },
-      { input: [0, 0], expected: 0, description: 'Adding zeros' },
-      { input: [100, 200], expected: 300, description: 'Larger numbers' }
+      { input: [100, 0.25], expected: 125, description: 'Quarter tax' },
+      { input: [80, 0.5], expected: 120, description: 'Half tax' },
+      { input: [60, 0], expected: 60, description: 'No tax' }
     ],
-    solution: `function sum(a, b) {
-  return a + b;
+    solution: `function totalWithTax(price, taxRate) {
+  return price + price * taxRate;
 }`
   },
   {
-    id: 'js-modulo',
-    title: 'Modulo (Remainder)',
-    category: 'JS Basics',
-    difficulty: 'Beginner',
+    id: 'essentials-split-bill',
+    title: 'Split the Bill',
+    category: 'Essentials',
+    difficulty: 'Easy',
     theorySteps: [
-      { text: "The **modulo operator** `%` returns the **remainder** after division." },
-      { text: "It tells you what's \"left over\" after dividing:", codeExample: 'console.log(10 % 3);  // 1 (10 ÷ 3 = 3 remainder 1)\nconsole.log(15 % 5);  // 0 (divides evenly)', runnable: true },
-      { text: "Think of it like this: if you have 10 cookies and give 3 to each person, you serve 3 people with **1 cookie left over**." },
-      { text: "The modulo is useful for checking divisibility—if the remainder is 0, it divides evenly.", codeExample: 'console.log(12 % 4);  // 0 - divides evenly\nconsole.log(13 % 4);  // 1 - has remainder', runnable: true }
+      { text: 'Division splits a total into equal parts.' },
+      {
+        text: 'Per-person cost is total divided by people:',
+        codeExample: 'const total = 45;\nconst people = 3;\nconsole.log(total / people);',
+        runnable: true
+      },
+      { text: 'Return the per-person amount.' }
     ],
-    hint: 'There is an operator that gives you the remainder after division.',
-    description: 'Return the remainder of `a` divided by `b`.',
+    hint: 'Use division to split the total.',
+    description: 'Return the per-person cost when splitting a bill.',
     examples: [
-      'modulo(10, 3) → 1',
-      'modulo(15, 5) → 0'
+      'splitBill(100, 4) -> 25',
+      'splitBill(45, 3) -> 15'
     ],
-    starterCode: `function modulo(a, b) {
-  // Return the remainder of a divided by b
-  
+    starterCode: `function splitBill(total, people) {
+  // Return total divided by people
+
 }`,
-    functionName: 'modulo',
+    functionName: 'splitBill',
     testCases: [
-      { input: [10, 3], expected: 1, description: '10 ÷ 3 = 3 remainder 1' },
-      { input: [15, 5], expected: 0, description: 'Evenly divisible' },
-      { input: [7, 2], expected: 1, description: 'Odd number mod 2' },
-      { input: [100, 7], expected: 2, description: 'Larger numbers' }
+      { input: [100, 4], expected: 25, description: 'Even split' },
+      { input: [45, 3], expected: 15, description: 'Another split' }
     ],
-    solution: `function modulo(a, b) {
-  return a % b;
-}`
-  },
-  {
-    id: 'js-even-odd',
-    title: 'Even or Odd',
-    category: 'JS Basics',
-    difficulty: 'Beginner',
-    theorySteps: [
-      { text: "A number is **even** if it's divisible by 2 (no remainder). Otherwise, it's **odd**." },
-      { text: "We can check this using the modulo operator:", codeExample: 'console.log(4 % 2);  // 0 (even)\nconsole.log(7 % 2);  // 1 (odd)\nconsole.log(0 % 2);  // 0 (even!)', runnable: true },
-      { text: "You can return the result of a comparison directly. Comparisons produce `true` or `false`:", codeExample: 'function isPositive(n) {\n  return n > 0;\n}\nconsole.log(isPositive(5));  // true\nconsole.log(isPositive(-3)); // false', runnable: true },
-      { text: "Comparisons like `>`, `<`, and `===` naturally produce booleans, so you can return them directly." }
-    ],
-    hint: 'What does n % 2 give you for even numbers? How can you compare that result to get true/false?',
-    description: 'Return `true` if number `n` is even, `false` otherwise.',
-    examples: [
-      'isEven(4) → true',
-      'isEven(7) → false'
-    ],
-    starterCode: `function isEven(n) {
-  // Return true if n is even, false if odd
-  
-}`,
-    functionName: 'isEven',
-    testCases: [
-      { input: [4], expected: true, description: '4 is even' },
-      { input: [7], expected: false, description: '7 is odd' },
-      { input: [0], expected: true, description: '0 is even' },
-      { input: [-2], expected: true, description: 'Negative even' },
-      { input: [-3], expected: false, description: 'Negative odd' }
-    ],
-    solution: `function isEven(n) {
-  return n % 2 === 0;
+    solution: `function splitBill(total, people) {
+  return total / people;
 }`
   },
 
   // ============================================
-  // CATEGORY: CONDITIONALS
+  // CATEGORY: DECISIONS & VALIDATION
   // ============================================
   {
-    id: 'cond-age-check',
-    title: 'Age Check',
-    category: 'Conditionals',
+    id: 'decision-free-shipping',
+    title: 'Free Shipping',
+    category: 'Decisions & Validation',
     difficulty: 'Beginner',
     theorySteps: [
-      { text: "Conditional statements let your code make **decisions**. They run different code based on whether something is true or false." },
-      { text: "The `if` statement runs code only when a condition is true:", codeExample: "const temperature = 35;\nif (temperature > 30) {\n  console.log(\"It's hot!\");\n}", runnable: true },
-      { text: "Use `else` to run different code when the condition is false:", codeExample: "const age = 15;\nif (age >= 21) {\n  console.log(\"Can drink\");\n} else {\n  console.log(\"Cannot drink\");\n}", runnable: true },
-      { text: "Common comparison operators: `>=` (greater or equal), `<=` (less or equal), `===` (strictly equal), `!==` (not equal)" }
+      { text: 'Use an if statement to decide between two outcomes.' },
+      {
+        text: 'The >= operator checks if a number meets a minimum:',
+        codeExample: 'const subtotal = 50;\nconsole.log(subtotal >= 50);',
+        runnable: true
+      },
+      { text: 'Return different values based on the condition.' }
     ],
-    hint: 'Use an if statement to check if the age meets a certain threshold, then return different strings for each case.',
-    description: 'Return `"adult"` if `age` is 18 or older, otherwise return `"minor"`.',
+    hint: 'If subtotal is 50 or more, return 0. Otherwise return 5.',
+    description: 'Return 0 for free shipping if subtotal >= 50, otherwise return 5.',
     examples: [
-      'checkAge(21) → "adult"',
-      'checkAge(15) → "minor"'
+      'shippingCost(60) -> 0',
+      'shippingCost(20) -> 5'
     ],
-    starterCode: `function checkAge(age) {
-  // Return "adult" if 18+, else "minor"
-  
+    starterCode: `function shippingCost(subtotal) {
+  // Return 0 if subtotal >= 50, else 5
+
 }`,
-    functionName: 'checkAge',
+    functionName: 'shippingCost',
     testCases: [
-      { input: [21], expected: "adult", description: "21 is an adult" },
-      { input: [18], expected: "adult", description: "18 is exactly adult" },
-      { input: [15], expected: "minor", description: "15 is a minor" },
-      { input: [0], expected: "minor", description: "0 is a minor" }
+      { input: [60], expected: 0, description: 'Free shipping' },
+      { input: [50], expected: 0, description: 'Edge case' },
+      { input: [49], expected: 5, description: 'Below threshold' },
+      { input: [0], expected: 5, description: 'No subtotal' }
     ],
-    solution: `function checkAge(age) {
-  if (age >= 18) {
-    return "adult";
-  } else {
-    return "minor";
-  }
+    solution: `function shippingCost(subtotal) {
+  return subtotal >= 50 ? 0 : 5;
 }`
   },
   {
-    id: 'cond-max',
-    title: 'Find Maximum',
-    category: 'Conditionals',
+    id: 'decision-clamp-percent',
+    title: 'Clamp Percentage',
+    category: 'Decisions & Validation',
     difficulty: 'Easy',
     theorySteps: [
-      { text: "You can use `if/else` to compare two values and take different actions based on the result." },
-      { text: "Here's how to check which value is bigger:", codeExample: 'const a = 10;\nconst b = 7;\nif (a > b) {\n  console.log("a is bigger");\n} else {\n  console.log("b is bigger or equal");\n}', runnable: true },
-      { text: "For simple if/else, JavaScript has a shorthand called the **ternary operator**:" },
-      { text: "The syntax is: `condition ? valueIfTrue : valueIfFalse`", codeExample: 'const score = 85;\nconst result = score >= 60 ? "pass" : "fail";\nconsole.log(result);', runnable: true }
+      { text: 'Clamping keeps a value within a safe range.' },
+      { text: 'Check the low bound first, then the high bound.' },
+      { text: 'Return the original value when it is already in range.' }
     ],
-    hint: 'Compare the two values and return whichever one is greater.',
-    description: 'Return the larger of the two numbers `a` and `b`.',
+    hint: 'Return 0 for values below 0, 100 for values above 100.',
+    description: 'Clamp a percentage to the range 0-100.',
     examples: [
-      'max(5, 3) → 5',
-      'max(2, 8) → 8'
+      'clampPercent(-10) -> 0',
+      'clampPercent(120) -> 100'
     ],
-    starterCode: `function max(a, b) {
-  // Return the larger number
-  
+    starterCode: `function clampPercent(value) {
+  // Keep value between 0 and 100
+
 }`,
-    functionName: 'max',
+    functionName: 'clampPercent',
     testCases: [
-      { input: [5, 3], expected: 5, description: '5 is larger than 3' },
-      { input: [2, 8], expected: 8, description: '8 is larger than 2' },
-      { input: [4, 4], expected: 4, description: 'Equal numbers' },
-      { input: [-1, -5], expected: -1, description: 'Negative numbers' }
+      { input: [-10], expected: 0, description: 'Below range' },
+      { input: [50], expected: 50, description: 'In range' },
+      { input: [120], expected: 100, description: 'Above range' },
+      { input: [0], expected: 0, description: 'Lower edge' },
+      { input: [100], expected: 100, description: 'Upper edge' }
     ],
-    solution: `function max(a, b) {
-  return a > b ? a : b;
+    solution: `function clampPercent(value) {
+  if (value < 0) return 0;
+  if (value > 100) return 100;
+  return value;
 }`
   },
   {
-    id: 'cond-grade',
-    title: 'Letter Grade',
-    category: 'Conditionals',
-    difficulty: 'Medium',
+    id: 'decision-can-rent',
+    title: 'Rental Eligibility',
+    category: 'Decisions & Validation',
+    difficulty: 'Easy',
     theorySteps: [
-      { text: "When you have **more than two possibilities**, use `else if` to chain multiple conditions." },
-      { text: "Each condition is checked in order. Once one matches, the rest are skipped:", codeExample: 'const temp = 25;\nif (temp >= 30) {\n  console.log("hot");\n} else if (temp >= 20) {\n  console.log("warm");\n} else {\n  console.log("cold");\n}', runnable: true },
-      { text: "⚠️ **Order matters!** If you check a broad condition first, specific cases might never be reached." },
-      { text: "Always check the **most restrictive condition first**, then work down to broader ones." }
+      { text: 'Sometimes you need more than one condition to be true.' },
+      {
+        text: 'Use && to require both conditions:',
+        codeExample: 'const age = 25;\nconst hasLicense = true;\nconsole.log(age >= 21 && hasLicense);',
+        runnable: true
+      },
+      { text: 'Return the boolean result of the combined check.' }
     ],
-    hint: 'Start by checking the highest grade threshold, then work your way down. Use else if for each grade boundary.',
-    description: 'Return the letter grade for a score: A (90+), B (80-89), C (70-79), D (60-69), F (below 60).',
+    hint: 'Both age and license status must be valid.',
+    description: 'Return true if age >= 21 and hasLicense is true.',
     examples: [
-      'getGrade(95) → "A"',
-      'getGrade(72) → "C"'
+      'canRentCar(25, true) -> true',
+      'canRentCar(20, true) -> false'
     ],
-    starterCode: `function getGrade(score) {
-  // Return letter grade: A, B, C, D, or F
-  
+    starterCode: `function canRentCar(age, hasLicense) {
+  // Return true only if age >= 21 and hasLicense is true
+
 }`,
-    functionName: 'getGrade',
+    functionName: 'canRentCar',
     testCases: [
-      { input: [95], expected: 'A', description: '95 is an A' },
-      { input: [85], expected: 'B', description: '85 is a B' },
-      { input: [72], expected: 'C', description: '72 is a C' },
-      { input: [65], expected: 'D', description: '65 is a D' },
-      { input: [50], expected: 'F', description: '50 is an F' }
+      { input: [25, true], expected: true, description: 'Eligible' },
+      { input: [20, true], expected: false, description: 'Too young' },
+      { input: [30, false], expected: false, description: 'No license' },
+      { input: [21, true], expected: true, description: 'Edge case' }
     ],
-    solution: `function getGrade(score) {
-  if (score >= 90) return "A";
-  if (score >= 80) return "B";
-  if (score >= 70) return "C";
-  if (score >= 60) return "D";
-  return "F";
+    solution: `function canRentCar(age, hasLicense) {
+  return age >= 21 && hasLicense;
 }`
   },
 
   // ============================================
-  // CATEGORY: LOOPS
+  // CATEGORY: LOOPS & AGGREGATION
   // ============================================
   {
-    id: 'loop-sum-1-to-n',
-    title: 'Sum 1 to N',
-    category: 'Loops',
+    id: 'loop-sum-prices',
+    title: 'Sum Prices',
+    category: 'Loops & Aggregation',
     difficulty: 'Easy',
     theorySteps: [
-      { text: "A `for` loop **repeats code** a specific number of times." },
-      { text: "Here's the basic structure:", codeExample: 'for (let i = 1; i <= 3; i++) {\n  console.log("Count:", i);\n}', runnable: true },
-      { text: "The loop has 3 parts: **initialization** (`let i = 1`), **condition** (`i <= 3`), and **update** (`i++`)." },
-      { text: "A common pattern is to **accumulate** values as you loop—keep a running total in a variable:", codeExample: 'let total = 0;\ntotal = total + 5;\ntotal = total + 10;\nconsole.log(total);  // 15', runnable: true }
+      { text: 'Loops help you add up a list of numbers.' },
+      {
+        text: 'Start with total = 0 and add each price:',
+        codeExample: 'const prices = [10, 20, 5];\nlet total = 0;\nfor (const price of prices) {\n  total += price;\n}\nconsole.log(total);',
+        runnable: true
+      },
+      { text: 'Return the final total.' }
     ],
-    hint: 'Create a variable to hold your running total. Loop through the numbers and keep adding to that variable.',
-    description: 'Return the sum of all numbers from 1 to `n` (inclusive).',
+    hint: 'Use a loop and a running total.',
+    description: 'Return the sum of all numbers in the prices array.',
     examples: [
-      'sumToN(5) → 15  (1+2+3+4+5)',
-      'sumToN(3) → 6   (1+2+3)'
+      'sumPrices([10, 20, 5]) -> 35',
+      'sumPrices([]) -> 0'
     ],
-    starterCode: `function sumToN(n) {
-  // Return sum of 1 + 2 + ... + n
-  
+    starterCode: `function sumPrices(prices) {
+  // Return the total of all prices
+
 }`,
-    functionName: 'sumToN',
+    functionName: 'sumPrices',
     testCases: [
-      { input: [5], expected: 15, description: '1+2+3+4+5 = 15' },
-      { input: [3], expected: 6, description: '1+2+3 = 6' },
-      { input: [1], expected: 1, description: 'Just 1' },
-      { input: [10], expected: 55, description: 'Sum to 10' }
+      { input: [[10, 20, 5]], expected: 35, description: 'Basic sum' },
+      { input: [[]], expected: 0, description: 'Empty array' },
+      { input: [[7]], expected: 7, description: 'Single item' }
     ],
-    solution: `function sumToN(n) {
+    solution: `function sumPrices(prices) {
   let total = 0;
-  for (let i = 1; i <= n; i++) {
-    total += i;
+  for (const price of prices) {
+    total += price;
   }
   return total;
 }`
   },
   {
-    id: 'loop-count-vowels',
-    title: 'Count Vowels',
-    category: 'Loops',
+    id: 'loop-average-rating',
+    title: 'Average Rating',
+    category: 'Loops & Aggregation',
     difficulty: 'Medium',
     theorySteps: [
-      { text: "You can loop through each **character** in a string using `for...of`:", codeExample: 'const word = "Hi!";\nfor (const char of word) {\n  console.log(char);\n}', runnable: true },
-      { text: "The `includes()` method checks if a string contains a specific character:", codeExample: 'console.log("xyz".includes("y"));  // true\nconsole.log("xyz".includes("a"));  // false', runnable: true },
-      { text: "To **count** things, keep a running counter and increment it when a condition is met:", codeExample: 'let count = 0;\ncount++;  // Now count is 1\ncount++;  // Now count is 2\nconsole.log(count);', runnable: true }
+      { text: 'Average is total divided by count.' },
+      { text: 'If there are no ratings, return 0 to avoid dividing by 0.' },
+      { text: 'Sum all ratings, then divide by ratings.length.' }
     ],
-    hint: 'Loop through each character. For each one, check if it\'s a vowel (a, e, i, o, u). If so, increment your counter.',
-    description: 'Return the number of vowels (a, e, i, o, u) in the string.',
+    hint: 'Guard against empty arrays before dividing.',
+    description: 'Return the average of ratings, or 0 if the array is empty.',
     examples: [
-      'countVowels("hello") → 2',
-      'countVowels("javascript") → 3'
+      'averageRating([5, 4, 3]) -> 4',
+      'averageRating([]) -> 0'
     ],
-    starterCode: `function countVowels(str) {
-  // Count and return number of vowels
-  
+    starterCode: `function averageRating(ratings) {
+  // Return average rating, or 0 if there are none
+
 }`,
-    functionName: 'countVowels',
+    functionName: 'averageRating',
     testCases: [
-      { input: ['hello'], expected: 2, description: 'hello has 2 vowels' },
-      { input: ['javascript'], expected: 3, description: 'javascript has 3' },
-      { input: ['xyz'], expected: 0, description: 'No vowels' },
-      { input: ['aeiou'], expected: 5, description: 'All vowels' }
+      { input: [[5, 4, 3]], expected: 4, description: 'Average of three' },
+      { input: [[4]], expected: 4, description: 'Single rating' },
+      { input: [[]], expected: 0, description: 'Empty array' }
     ],
-    solution: `function countVowels(str) {
+    solution: `function averageRating(ratings) {
+  if (ratings.length === 0) return 0;
+  let total = 0;
+  for (const rating of ratings) {
+    total += rating;
+  }
+  return total / ratings.length;
+}`
+  },
+  {
+    id: 'loop-count-short-words',
+    title: 'Count Short Words',
+    category: 'Loops & Aggregation',
+    difficulty: 'Medium',
+    theorySteps: [
+      { text: 'Loop through each word in the list.' },
+      { text: 'Check word.length against the max length.' },
+      { text: 'Increment a counter when the word is short enough.' }
+    ],
+    hint: 'Count words where word.length <= maxLength.',
+    description: 'Return how many words are at most maxLength characters.',
+    examples: [
+      'countShortWords(["hi", "there", "a"], 2) -> 2',
+      'countShortWords(["apple", "pear", "fig"], 3) -> 1'
+    ],
+    starterCode: `function countShortWords(words, maxLength) {
+  // Count words with length <= maxLength
+
+}`,
+    functionName: 'countShortWords',
+    testCases: [
+      { input: [['hi', 'there', 'a'], 2], expected: 2, description: 'Two short' },
+      { input: [['apple', 'pear', 'fig'], 3], expected: 1, description: 'Only fig' },
+      { input: [[], 3], expected: 0, description: 'Empty list' }
+    ],
+    solution: `function countShortWords(words, maxLength) {
   let count = 0;
-  for (const char of str.toLowerCase()) {
-    if ("aeiou".includes(char)) {
+  for (const word of words) {
+    if (word.length <= maxLength) {
       count++;
     }
   }
   return count;
 }`
   },
+
+  // ============================================
+  // CATEGORY: FUNCTIONS & REUSE
+  // ============================================
   {
-    id: 'loop-fizzbuzz',
-    title: 'FizzBuzz',
-    category: 'Loops',
-    difficulty: 'Medium',
+    id: 'func-format-price',
+    title: 'Format Price',
+    category: 'Functions & Reuse',
+    difficulty: 'Easy',
     theorySteps: [
-      { text: "**FizzBuzz** is a classic programming interview question! Here are the rules:" },
-      { text: "• If divisible by 3, say \"Fizz\"\n• If divisible by 5, say \"Buzz\"\n• If divisible by **both**, say \"FizzBuzz\"\n• Otherwise, just say the number" },
-      { text: "Remember modulo `%`? When the remainder is 0, the number divides evenly:", codeExample: 'console.log(15 % 3);  // 0 (divisible)\nconsole.log(15 % 5);  // 0 (divisible)\nconsole.log(14 % 5);  // 4 (NOT divisible)', runnable: true },
-      { text: "⚠️ Think about the **order** of your checks. What happens if you check divisibility by 3 first when a number is divisible by both?" }
+      { text: 'Default parameters give a fallback value when nothing is passed.' },
+      {
+        text: 'Use toFixed(2) to format a number with two decimals:',
+        codeExample: 'const amount = 12.5;\nconsole.log(amount.toFixed(2));  // "12.50"',
+        runnable: true
+      },
+      { text: 'Return a string like "USD 12.50".' }
     ],
-    hint: 'Check the "both" condition first (divisible by 3 AND 5), then check each individually, then default to the number.',
-    description: 'Return "FizzBuzz" if divisible by 3 and 5, "Fizz" if by 3, "Buzz" if by 5, else the number as string.',
+    hint: 'Use a default for currency and toFixed(2) for decimals.',
+    description: 'Return a formatted price string, defaulting currency to "USD".',
     examples: [
-      'fizzBuzz(15) → "FizzBuzz"',
-      'fizzBuzz(9) → "Fizz"',
-      'fizzBuzz(10) → "Buzz"',
-      'fizzBuzz(7) → "7"'
+      'formatPrice(12) -> "USD 12.00"',
+      'formatPrice(12.5, "EUR") -> "EUR 12.50"'
     ],
-    starterCode: `function fizzBuzz(n) {
-  // Implement FizzBuzz logic
-  
+    starterCode: `function formatPrice(amount, currency) {
+  // Default currency to "USD" and format with 2 decimals
+
 }`,
-    functionName: 'fizzBuzz',
+    functionName: 'formatPrice',
     testCases: [
-      { input: [15], expected: 'FizzBuzz', description: '15 is FizzBuzz' },
-      { input: [9], expected: 'Fizz', description: '9 is Fizz' },
-      { input: [10], expected: 'Buzz', description: '10 is Buzz' },
-      { input: [7], expected: '7', description: '7 is just 7' },
-      { input: [30], expected: 'FizzBuzz', description: '30 is FizzBuzz' }
+      { input: [12], expected: 'USD 12.00', description: 'Default currency' },
+      { input: [12.5, 'EUR'], expected: 'EUR 12.50', description: 'Custom currency' },
+      { input: [0, 'USD'], expected: 'USD 0.00', description: 'Zero amount' }
     ],
-    solution: `function fizzBuzz(n) {
-  if (n % 3 === 0 && n % 5 === 0) return "FizzBuzz";
-  if (n % 3 === 0) return "Fizz";
-  if (n % 5 === 0) return "Buzz";
-  return String(n);
+    solution: `function formatPrice(amount, currency = "USD") {
+  return \`\${currency} \${amount.toFixed(2)}\`;
 }`
   },
-
-  // ============================================
-  // CATEGORY: FUNCTIONS
-  // ============================================
   {
-    id: 'func-arrow',
-    title: 'Arrow Functions',
-    category: 'Functions',
-    difficulty: 'Beginner',
-    theorySteps: [
-      { text: "**Arrow functions** are a shorter way to write functions in JavaScript." },
-      { text: "Compare these two ways of writing the same function:", codeExample: '// Traditional\nfunction greet(name) {\n  return "Hello, " + name;\n}\nconsole.log(greet("Alice"));', runnable: true },
-      { text: "Here's the same thing as an arrow function:", codeExample: '// Arrow function\nconst greet = (name) => "Hello, " + name;\nconsole.log(greet("Bob"));', runnable: true },
-      { text: "**Syntax rules:**\n• Use `=>` instead of `function`\n• If only one expression, no `{}` or `return` needed\n• If one parameter, parentheses optional: `x => x * 2`" }
-    ],
-    hint: 'Use arrow syntax: const functionName = (parameters) => expression',
-    description: 'The function should return the product of `a` and `b`. Use an arrow function.',
-    examples: [
-      'multiply(3, 4) → 12',
-      'multiply(5, 2) → 10'
-    ],
-    starterCode: `// Create an arrow function called 'multiply'
-// that takes a and b and returns their product
-
-const multiply = // your arrow function here
-`,
-    functionName: 'multiply',
-    testCases: [
-      { input: [3, 4], expected: 12, description: '3 × 4 = 12' },
-      { input: [5, 2], expected: 10, description: '5 × 2 = 10' },
-      { input: [0, 100], expected: 0, description: '0 × anything = 0' },
-      { input: [-2, 3], expected: -6, description: 'Negative numbers' }
-    ],
-    solution: `const multiply = (a, b) => a * b;`
-  },
-  {
-    id: 'func-callback',
-    title: 'Using Callbacks',
-    category: 'Functions',
+    id: 'func-apply-callback',
+    title: 'Apply Transform',
+    category: 'Functions & Reuse',
     difficulty: 'Medium',
     theorySteps: [
-      { text: "A **callback** is a function passed as an argument to another function." },
-      { text: "The receiving function can then \"call back\" to it:", codeExample: 'function doTwice(action) {\n  action();\n  action();\n}\n\ndoTwice(() => console.log("Hi!"));', runnable: true },
-      { text: "Callbacks let you customize behavior. The caller decides what operation to perform:" },
-      { text: "Array methods like `map` and `filter` use callbacks:", codeExample: 'const nums = [1, 2, 3];\nconst doubled = nums.map(x => x * 2);\nconsole.log(doubled);', runnable: true }
+      { text: 'A callback is a function passed into another function.' },
+      {
+        text: 'Call the callback with the value and return the result:',
+        codeExample: 'function apply(value, callback) {\n  return callback(value);\n}\nconsole.log(apply(5, x => x * 2));',
+        runnable: true
+      },
+      { text: 'This lets callers supply different behaviors.' }
     ],
-    hint: 'The callback parameter is a function. Call it with value as the argument, then return what it gives back.',
-    description: 'Complete the function so it calls the callback with the value and returns the result. The test will pass a doubling function.',
+    hint: 'Call callback(value) and return what it gives back.',
+    description: 'Call the callback with value and return the result.',
     examples: [
-      'applyCallback(5, x => x * 2) → 10',
-      'applyCallback(3, x => x * 2) → 6'
+      'applyCallback(5, x => x * 2) -> 10',
+      'applyCallback(3, x => x * 2) -> 6'
     ],
-    starterCode: `// The callback parameter is a function!
-// Call it like: callback(someValue)
-function applyCallback(value, callback) {
+    starterCode: `function applyCallback(value, callback) {
   // Call callback with value and return the result
-  
+
 }`,
     functionName: 'applyCallback',
     testCases: [
-      { input: [5], expected: 10, description: 'Double 5 → 10' },
-      { input: [3], expected: 6, description: 'Double 3 → 6' },
-      { input: [0], expected: 0, description: 'Double 0 → 0' },
-      { input: [7], expected: 14, description: 'Double 7 → 14' }
+      { input: [5], expected: 10, description: 'Double 5' },
+      { input: [3], expected: 6, description: 'Double 3' },
+      { input: [0], expected: 0, description: 'Double 0' }
     ],
     solution: `function applyCallback(value, callback) {
   return callback(value);
 }`
   },
   {
-    id: 'func-default-params',
-    title: 'Default Parameters',
-    category: 'Functions',
-    difficulty: 'Easy',
+    id: 'func-safe-divide',
+    title: 'Safe Divide',
+    category: 'Functions & Reuse',
+    difficulty: 'Medium',
     theorySteps: [
-      { text: "You can give function parameters **default values** that are used if no argument is provided." },
-      { text: "Syntax: put `= defaultValue` after the parameter name:", codeExample: 'function greet(name = "Guest") {\n  return "Hello, " + name;\n}\nconsole.log(greet("Alice"));\nconsole.log(greet());  // Uses default', runnable: true },
-      { text: "You can have multiple default parameters:", codeExample: 'function createUser(name = "Anon", role = "user") {\n  return name + " (" + role + ")";\n}\nconsole.log(createUser());\nconsole.log(createUser("Jo", "admin"));', runnable: true }
+      { text: 'Guard clauses return early when input is invalid.' },
+      { text: 'Division by 0 is invalid, so return null in that case.' },
+      { text: 'Otherwise, return a / b.' }
     ],
-    hint: 'In the function definition, assign a default value to the parameter using = syntax.',
-    description: 'Create a greeting function that defaults to "World" if no name given.',
+    hint: 'If b is 0, return null.',
+    description: 'Return a / b, or null when b is 0.',
     examples: [
-      'greet("Alice") → "Hello, Alice!"',
-      'greet() → "Hello, World!"'
+      'safeDivide(10, 2) -> 5',
+      'safeDivide(5, 0) -> null'
     ],
-    starterCode: `function greet(name) {
-  // Default name to "World" if not provided
-  // Return "Hello, {name}!"
-  
+    starterCode: `function safeDivide(a, b) {
+  // Return null when b is 0
+
 }`,
-    functionName: 'greet',
+    functionName: 'safeDivide',
     testCases: [
-      { input: ['Alice'], expected: 'Hello, Alice!', description: 'Greet Alice' },
-      { input: [], expected: 'Hello, World!', description: 'Default greeting' },
-      { input: ['Bob'], expected: 'Hello, Bob!', description: 'Greet Bob' }
+      { input: [10, 2], expected: 5, description: 'Normal division' },
+      { input: [5, 0], expected: null, description: 'Divide by zero' },
+      { input: [9, 3], expected: 3, description: 'Even division' }
     ],
-    solution: `function greet(name = "World") {
-  return "Hello, " + name + "!";
+    solution: `function safeDivide(a, b) {
+  if (b === 0) return null;
+  return a / b;
 }`
   },
 
   // ============================================
-  // CATEGORY: STRINGS
+  // CATEGORY: DATA SHAPING
   // ============================================
   {
-    id: 'str-first-3',
-    title: 'First 3 Characters',
-    category: 'Strings',
+    id: 'data-last-item',
+    title: 'Last Item',
+    category: 'Data Shaping',
     difficulty: 'Easy',
     theorySteps: [
-      { text: "Strings are sequences of characters. JavaScript provides methods to **extract portions** of them." },
-      { text: "The `slice()` method extracts a section: `str.slice(start, end)`", codeExample: 'const word = "Fantastic";\nconsole.log(word.slice(0, 4));  // "Fant"\nconsole.log(word.slice(3, 7));  // "tast"', runnable: true },
-      { text: "**Important:** The `end` index is NOT included in the result. And indices start at 0!" },
-      { text: "So `slice(0, 3)` gets characters at positions 0, 1, and 2 (the first 3 characters)." }
+      { text: 'Arrays are zero-indexed, so the last index is length - 1.' },
+      { text: 'Handle empty arrays before accessing the last element.' },
+      { text: 'Return the last item or null if the array is empty.' }
     ],
-    hint: 'Use slice with a starting index and an ending index to extract a portion of the string.',
-    description: 'Return the first 3 characters of string `str`.',
+    hint: 'Use arr[arr.length - 1] when arr is not empty.',
+    description: 'Return the last element of the array, or null if empty.',
     examples: [
-      'firstThree("abcdef") → "abc"',
-      'firstThree("Hello") → "Hel"'
+      'lastItem([1, 2, 3]) -> 3',
+      'lastItem([]) -> null'
     ],
-    starterCode: `function firstThree(str) {
-  // Return the first 3 characters of str
-  
+    starterCode: `function lastItem(arr) {
+  // Return last element or null
+
 }`,
-    functionName: 'firstThree',
+    functionName: 'lastItem',
     testCases: [
-      { input: ['abcdef'], expected: 'abc', description: 'Basic string' },
-      { input: ['Hello'], expected: 'Hel', description: 'Another string' },
-      { input: ['JavaScript'], expected: 'Jav', description: 'Longer string' },
-      { input: ['abc'], expected: 'abc', description: 'Exactly 3 chars' }
+      { input: [[1, 2, 3]], expected: 3, description: 'Basic array' },
+      { input: [['a']], expected: 'a', description: 'Single element' },
+      { input: [[]], expected: null, description: 'Empty array' }
     ],
-    solution: `function firstThree(str) {
-  return str.slice(0, 3);
+    solution: `function lastItem(arr) {
+  if (arr.length === 0) return null;
+  return arr[arr.length - 1];
 }`
   },
   {
-    id: 'str-last-n',
-    title: 'Last N Characters',
-    category: 'Strings',
-    difficulty: 'Easy',
+    id: 'data-active-users',
+    title: 'Filter Active Users',
+    category: 'Data Shaping',
+    difficulty: 'Medium',
     theorySteps: [
-      { text: "To get characters from the **end** of a string, use **negative indices** with `slice()`." },
-      { text: "Negative indices count backwards:\n• `-1` = last character\n• `-2` = second-to-last\n• `-n` = last n characters" },
-      { text: "This is much cleaner than calculating `str.length - n`:", codeExample: 'const word = "Sunshine";\nconsole.log(word.slice(-3));   // "ine"\nconsole.log(word.slice(-5));   // "shine"\nconsole.log(word.slice(-1));   // "e"', runnable: true }
+      { text: 'Use filter to keep only items that match a condition.' },
+      {
+        text: 'The callback should return true for active users:',
+        codeExample: 'const users = [{ name: "A", active: true }, { name: "B", active: false }];\nconst active = users.filter(user => user.active);\nconsole.log(active);',
+        runnable: true
+      },
+      { text: 'Return the filtered array.' }
     ],
-    hint: 'Slice accepts negative numbers to count from the end of the string.',
-    description: 'Return the last `n` characters of string `str`.',
+    hint: 'Filter users where user.active is true.',
+    description: 'Return only the users that are active.',
     examples: [
-      'lastN("abcdef", 2) → "ef"',
-      'lastN("Hello", 3) → "llo"'
+      'activeOnly([{name:"A",active:true},{name:"B",active:false}]) -> [{name:"A",active:true}]',
+      'activeOnly([]) -> []'
     ],
-    starterCode: `function lastN(str, n) {
-  // Return the last n characters of str
-  
+    starterCode: `function activeOnly(users) {
+  // Return only active users
+
 }`,
-    functionName: 'lastN',
+    functionName: 'activeOnly',
     testCases: [
-      { input: ['abcdef', 2], expected: 'ef', description: 'Last 2 characters' },
-      { input: ['Hello', 3], expected: 'llo', description: 'Last 3 characters' },
-      { input: ['JavaScript', 4], expected: 'ript', description: 'Last 4 of longer string' },
-      { input: ['World', 1], expected: 'd', description: 'Just last character' }
+      {
+        input: [[{ name: 'A', active: true }, { name: 'B', active: false }, { name: 'C', active: true }]],
+        expected: [{ name: 'A', active: true }, { name: 'C', active: true }],
+        description: 'Two active'
+      },
+      { input: [[{ name: 'Solo', active: true }]], expected: [{ name: 'Solo', active: true }], description: 'Single active' },
+      { input: [[{ name: 'Off', active: false }]], expected: [], description: 'None active' }
     ],
-    solution: `function lastN(str, n) {
-  return str.slice(-n);
+    solution: `function activeOnly(users) {
+  return users.filter(user => user.active);
 }`
   },
   {
-    id: 'str-remove-last-3',
-    title: 'Remove Last 3 Characters',
-    category: 'Strings',
-    difficulty: 'Easy',
+    id: 'data-get-setting',
+    title: 'Get Setting with Fallback',
+    category: 'Data Shaping',
+    difficulty: 'Medium',
     theorySteps: [
-      { text: "To **remove** characters from the end, use `slice()` with a negative end index." },
-      { text: "The pattern is: `str.slice(0, -n)` removes the last n characters.", codeExample: 'const word = "Testing";\nconsole.log(word.slice(0, -2));  // "Testi"\nconsole.log(word.slice(0, -4));  // "Tes"', runnable: true },
-      { text: "It starts at position 0 and stops n characters before the end.", codeExample: 'console.log("Hello World".slice(0, -6));  // "Hello"', runnable: true },
-      { text: "Note: `slice()` returns a **new string**—the original is not modified." }
+      { text: 'Objects store key-value pairs.' },
+      { text: 'Sometimes a key is missing and you need a fallback value.' },
+      { text: 'Check for undefined so 0 and false are not treated as missing.' }
     ],
-    hint: 'Think about how to use slice with both a start and end index, where the end is negative.',
-    description: 'Return the string `str` without its last 3 characters.',
+    hint: 'Return config[key] when it is not undefined, otherwise fallback.',
+    description: 'Return a setting value or a fallback when it is missing.',
     examples: [
-      'removeLast3("abcdef") → "abc"',
-      'removeLast3("Hello!") → "Hel"'
+      'getSetting({ theme: "dark" }, "theme", "light") -> "dark"',
+      'getSetting({}, "theme", "light") -> "light"'
     ],
-    starterCode: `function removeLast3(str) {
-  // Return str without its last 3 characters
-  
+    starterCode: `function getSetting(config, key, fallback) {
+  // Return config[key] when defined, else fallback
+
 }`,
-    functionName: 'removeLast3',
+    functionName: 'getSetting',
     testCases: [
-      { input: ['abcdef'], expected: 'abc', description: 'Remove last 3' },
-      { input: ['Hello!'], expected: 'Hel', description: 'Another string' },
-      { input: ['JavaScript'], expected: 'JavaScr', description: 'Longer string' },
-      { input: ['abcd'], expected: 'a', description: 'Short string' },
-      { input: ['ab'], expected: '', description: 'String shorter than 3 chars' }
+      { input: [{ theme: 'dark' }, 'theme', 'light'], expected: 'dark', description: 'Found value' },
+      { input: [{}, 'theme', 'light'], expected: 'light', description: 'Missing value' },
+      { input: [{ count: 0 }, 'count', 10], expected: 0, description: 'Falsy but defined' }
     ],
-    solution: `function removeLast3(str) {
-  return str.slice(0, -3);
+    solution: `function getSetting(config, key, fallback) {
+  if (config[key] !== undefined) return config[key];
+  return fallback;
 }`
   },
 
   // ============================================
-  // CATEGORY: ARRAYS
+  // CATEGORY: STRINGS & PARSING
   // ============================================
   {
-    id: 'arr-nth-element',
-    title: 'Get Nth Element',
-    category: 'Arrays',
+    id: 'string-clean-input',
+    title: 'Clean Input',
+    category: 'Strings & Parsing',
     difficulty: 'Easy',
     theorySteps: [
-      { text: "Arrays store **multiple values** in a single variable. Each value has an **index** starting from 0." },
-      { text: "Use **bracket notation** to access elements:", codeExample: 'const colors = ["red", "green", "blue"];\nconsole.log(colors[0]);  // "red"\nconsole.log(colors[1]);  // "green"\nconsole.log(colors[2]);  // "blue"', runnable: true },
-      { text: "You can use a **variable** as the index:", codeExample: 'const fruits = ["apple", "banana", "cherry"];\nconst i = 1;\nconsole.log(fruits[i]);  // "banana"', runnable: true },
-      { text: "Remember: The **first** element is at index 0, not 1!" }
+      { text: 'User input often has extra spaces and inconsistent casing.' },
+      {
+        text: 'Use trim() to remove outer whitespace:',
+        codeExample: 'const raw = "  Hello  ";\nconsole.log(raw.trim());',
+        runnable: true
+      },
+      { text: 'Use toLowerCase() to normalize text.' }
     ],
-    hint: 'Access array elements using bracket notation with the index.',
-    description: 'Return the element at index `n` from array `arr`.',
+    hint: 'Trim first, then lowercase.',
+    description: 'Return the text trimmed and lowercased.',
     examples: [
-      'getNth([1, 2, 3, 4], 2) → 3',
-      'getNth(["a", "b", "c"], 0) → "a"'
+      'cleanInput("  Hello ") -> "hello"',
+      'cleanInput("JAVA script") -> "java script"'
     ],
-    starterCode: `function getNth(arr, n) {
-  // Return the element at index n
-  
+    starterCode: `function cleanInput(text) {
+  // Trim and lowercase the text
+
 }`,
-    functionName: 'getNth',
+    functionName: 'cleanInput',
     testCases: [
-      { input: [[1, 2, 3, 4], 2], expected: 3, description: 'Get third element' },
-      { input: [['a', 'b', 'c'], 0], expected: 'a', description: 'Get first element' },
-      { input: [[10, 20, 30], 1], expected: 20, description: 'Get second element' },
-      { input: [['x'], 0], expected: 'x', description: 'Single element array' }
+      { input: ['  Hello '], expected: 'hello', description: 'Trim and lowercase' },
+      { input: ['JAVA script'], expected: 'java script', description: 'Lowercase only' },
+      { input: ['   '], expected: '', description: 'Only spaces' }
     ],
-    solution: `function getNth(arr, n) {
-  return arr[n];
+    solution: `function cleanInput(text) {
+  return text.trim().toLowerCase();
 }`
   },
   {
-    id: 'arr-count-negative',
-    title: 'Count Negative Numbers',
-    category: 'Arrays',
+    id: 'string-file-extension',
+    title: 'File Extension',
+    category: 'Strings & Parsing',
     difficulty: 'Medium',
     theorySteps: [
-      { text: "The `filter()` method creates a **new array** with elements that pass a test." },
-      { text: "You provide a function that returns true/false for each element:", codeExample: 'const numbers = [5, 12, 8, 130, 44];\nconst big = numbers.filter(n => n > 10);\nconsole.log(big);  // [12, 130, 44]', runnable: true },
-      { text: "After filtering, use `.length` to count how many passed:", codeExample: 'const nums = [1, -2, 3, -4, 5];\nconst positives = nums.filter(n => n > 0);\nconsole.log(positives.length);  // 3', runnable: true },
-      { text: "You can chain these together: `arr.filter(condition).length`" }
+      { text: 'Use lastIndexOf(".") to find the final dot.' },
+      { text: 'If there is no dot (or it is the first char), return an empty string.' },
+      { text: 'Use slice(index + 1) to get the extension.' }
     ],
-    hint: 'Filter the array to keep only numbers that meet your condition, then get the length of the result.',
-    description: 'Return the count of negative numbers in array `arr`.',
+    hint: 'Find the last dot and slice after it.',
+    description: 'Return the file extension without the dot, or "" if none.',
     examples: [
-      'countNegative([1, -2, 3, -4]) → 2',
-      'countNegative([5, 10, 15]) → 0'
+      'getExtension("photo.jpg") -> "jpg"',
+      'getExtension("README") -> ""'
     ],
-    starterCode: `function countNegative(arr) {
-  // Return the count of negative numbers
-  
+    starterCode: `function getExtension(filename) {
+  // Return file extension without the dot, or ""
+
 }`,
-    functionName: 'countNegative',
+    functionName: 'getExtension',
     testCases: [
-      { input: [[1, -2, 3, -4]], expected: 2, description: 'Two negatives' },
-      { input: [[5, 10, 15]], expected: 0, description: 'No negatives' },
-      { input: [[-1, -2, -3]], expected: 3, description: 'All negatives' },
-      { input: [[0, -1, 0, -2, 0]], expected: 2, description: 'With zeros' }
+      { input: ['photo.jpg'], expected: 'jpg', description: 'Basic extension' },
+      { input: ['archive.tar.gz'], expected: 'gz', description: 'Last extension' },
+      { input: ['README'], expected: '', description: 'No dot' },
+      { input: ['.env'], expected: '', description: 'Dot at start' }
     ],
-    solution: `function countNegative(arr) {
-  return arr.filter(n => n < 0).length;
+    solution: `function getExtension(filename) {
+  const dotIndex = filename.lastIndexOf('.');
+  if (dotIndex <= 0) return '';
+  return filename.slice(dotIndex + 1);
 }`
   },
   {
-    id: 'arr-sort-descending',
-    title: 'Sort Numbers Descending',
-    category: 'Arrays',
+    id: 'string-slugify',
+    title: 'Slugify Title',
+    category: 'Strings & Parsing',
     difficulty: 'Medium',
     theorySteps: [
-      { text: "JavaScript's `sort()` has a quirk: by default, it sorts **as strings**, not numbers!" },
-      { text: "Watch this surprising behavior:", codeExample: 'const nums = [10, 2, 30];\nconsole.log(nums.sort());  // [10, 2, 30] → becomes [10, 2, 30] (string order!)', runnable: true },
-      { text: "Fix it by passing a **compare function**: `arr.sort((a, b) => ...)`" },
-      { text: "The compare function should return:\n• **Negative** → a comes first\n• **Positive** → b comes first\n• **Zero** → order unchanged", codeExample: 'const nums = [10, 2, 30];\nconsole.log(nums.sort((a, b) => a - b));  // Ascending', runnable: true }
+      { text: 'A slug is lowercase words separated by hyphens.' },
+      { text: 'Trim and lowercase the title, then split on spaces.' },
+      { text: 'Remove empty parts and join with "-".' }
     ],
-    hint: 'The compare function should return positive when the first argument should come after the second.',
-    description: 'Sort the array of numbers `arr` in descending order (largest first).',
+    hint: 'Use trim, toLowerCase, split, filter, and join.',
+    description: 'Convert a title into a URL-friendly slug.',
     examples: [
-      'sortDesc([3, 1, 4, 1, 5]) → [5, 4, 3, 1, 1]',
-      'sortDesc([10, 2]) → [10, 2]'
+      'slugify("Hello World") -> "hello-world"',
+      'slugify("  JavaScript   Basics ") -> "javascript-basics"'
     ],
-    starterCode: `function sortDesc(arr) {
-  // Sort arr in descending order (largest to smallest)
-  
+    starterCode: `function slugify(title) {
+  // Convert title to a lowercase, hyphenated slug
+
 }`,
-    functionName: 'sortDesc',
+    functionName: 'slugify',
     testCases: [
-      { input: [[3, 1, 4, 1, 5]], expected: [5, 4, 3, 1, 1], description: 'Mixed numbers' },
-      { input: [[10, 2]], expected: [10, 2], description: 'Tests the sort bug!' },
-      { input: [[1, 2, 3]], expected: [3, 2, 1], description: 'Already ascending' },
-      { input: [[5, 5, 5]], expected: [5, 5, 5], description: 'All same' },
-      { input: [[-1, -5, 3]], expected: [3, -1, -5], description: 'With negatives' }
+      { input: ['Hello World'], expected: 'hello-world', description: 'Basic slug' },
+      { input: ['  JavaScript   Basics '], expected: 'javascript-basics', description: 'Extra spaces' },
+      { input: ['Already-Slug'], expected: 'already-slug', description: 'Keep hyphen' }
     ],
-    solution: `function sortDesc(arr) {
-  return arr.sort((a, b) => b - a);
+    solution: `function slugify(title) {
+  return title
+    .trim()
+    .toLowerCase()
+    .split(' ')
+    .filter(Boolean)
+    .join('-');
 }`
   },
 
   // ============================================
-  // CATEGORY: OBJECTS
+  // CATEGORY: MINI PROJECTS
   // ============================================
   {
-    id: 'obj-access-property',
-    title: 'Access Object Property',
-    category: 'Objects',
-    difficulty: 'Easy',
+    id: 'mini-cart-total',
+    title: 'Cart Total',
+    category: 'Mini Projects',
+    difficulty: 'Medium',
     theorySteps: [
-      { text: "Objects store data as **key-value pairs**:", codeExample: 'const car = {\n  brand: "Toyota",\n  year: 2020\n};\nconsole.log(car);', runnable: true },
-      { text: "**Dot notation** works when you know the key name:", codeExample: 'const person = { name: "Alice", age: 25 };\nconsole.log(person.name);  // "Alice"\nconsole.log(person.age);   // 25', runnable: true },
-      { text: "**Bracket notation** is needed when the key is in a variable:", codeExample: 'const person = { name: "Bob" };\nconst key = "name";\nconsole.log(person[key]);  // "Bob"', runnable: true },
-      { text: "When the property name comes from a parameter or variable, you **must** use bracket notation." }
+      { text: 'Each cart item has a price and quantity.' },
+      { text: 'Multiply price by quantity and add to a running total.' },
+      { text: 'Return the final total cost.' }
     ],
-    hint: 'When the property name is stored in a variable, you need to use bracket notation instead of dot notation.',
-    description: 'Return the value of the property with key `key` from object `obj`.',
+    hint: 'Loop items and add item.price * item.quantity.',
+    description: 'Return the total cost for all items in the cart.',
     examples: [
-      'getProperty({a: 1, b: 2}, "a") → 1',
-      'getProperty({name: "Alice"}, "name") → "Alice"'
+      'cartTotal([{price:10,quantity:2},{price:5,quantity:3}]) -> 35',
+      'cartTotal([]) -> 0'
     ],
-    starterCode: `function getProperty(obj, key) {
-  // Return the value of obj[key]
-  
+    starterCode: `function cartTotal(items) {
+  // Sum price * quantity for each item
+
 }`,
-    functionName: 'getProperty',
+    functionName: 'cartTotal',
     testCases: [
-      { input: [{ a: 1, b: 2 }, 'a'], expected: 1, description: 'Get property a' },
-      { input: [{ name: 'Alice', age: 25 }, 'name'], expected: 'Alice', description: 'Get name' },
-      { input: [{ x: 100 }, 'x'], expected: 100, description: 'Single property' },
-      { input: [{ active: true }, 'active'], expected: true, description: 'Boolean value' }
+      {
+        input: [[{ price: 10, quantity: 2 }, { price: 5, quantity: 3 }]],
+        expected: 35,
+        description: 'Multiple items'
+      },
+      { input: [[]], expected: 0, description: 'Empty cart' },
+      { input: [[{ price: 7, quantity: 1 }]], expected: 7, description: 'Single item' }
     ],
-    solution: `function getProperty(obj, key) {
-  return obj[key];
+    solution: `function cartTotal(items) {
+  let total = 0;
+  for (const item of items) {
+    total += item.price * item.quantity;
+  }
+  return total;
 }`
   },
   {
-    id: 'obj-swap-keys-values',
-    title: 'Swap Keys and Values',
-    category: 'Objects',
-    difficulty: 'Medium',
+    id: 'mini-score-summary',
+    title: 'Score Summary',
+    category: 'Mini Projects',
+    difficulty: 'Hard',
     theorySteps: [
-      { text: "Sometimes you need to create a new object with **keys and values swapped**." },
-      { text: "`Object.entries()` converts an object to an array of [key, value] pairs:", codeExample: 'const obj = { x: 10, y: 20 };\nconsole.log(Object.entries(obj));\n// [["x", 10], ["y", 20]]', runnable: true },
-      { text: "`Object.fromEntries()` does the reverse—pairs back to object:", codeExample: 'const pairs = [["a", 1], ["b", 2]];\nconsole.log(Object.fromEntries(pairs));\n// { a: 1, b: 2 }', runnable: true },
-      { text: "You can use `map()` on entries to transform each [key, value] pair before converting back." }
+      { text: 'Summaries often include min, max, and average.' },
+      { text: 'If the list is empty, return nulls for each field.' },
+      { text: 'Otherwise, track min, max, and sum as you loop.' }
     ],
-    hint: 'Convert to entries, transform each pair to swap the key and value positions, then convert back to an object.',
-    description: 'Return a new object where the keys and values of `obj` are swapped.',
+    hint: 'Initialize min and max from the first score, then loop.',
+    description: 'Return { min, max, average } for the scores array.',
     examples: [
-      'swapKeysValues({a: "1", b: "2"}) → {"1": "a", "2": "b"}',
-      'swapKeysValues({x: "y"}) → {y: "x"}'
+      'summarizeScores([2, 8, 5]) -> { min: 2, max: 8, average: 5 }',
+      'summarizeScores([]) -> { min: null, max: null, average: null }'
     ],
-    starterCode: `function swapKeysValues(obj) {
-  // Return a new object with keys and values swapped
-  
+    starterCode: `function summarizeScores(scores) {
+  // Return { min, max, average } or nulls for empty input
+
 }`,
-    functionName: 'swapKeysValues',
+    functionName: 'summarizeScores',
     testCases: [
-      { input: [{ a: '1', b: '2' }], expected: { '1': 'a', '2': 'b' }, description: 'Swap string values' },
-      { input: [{ x: 'y' }], expected: { y: 'x' }, description: 'Single property' },
-      { input: [{ name: 'id', value: 'data' }], expected: { id: 'name', data: 'value' }, description: 'Word keys' }
+      {
+        input: [[2, 8, 5]],
+        expected: { min: 2, max: 8, average: 5 },
+        description: 'Three scores'
+      },
+      {
+        input: [[10]],
+        expected: { min: 10, max: 10, average: 10 },
+        description: 'Single score'
+      },
+      {
+        input: [[]],
+        expected: { min: null, max: null, average: null },
+        description: 'Empty list'
+      }
     ],
-    solution: `function swapKeysValues(obj) {
-  return Object.fromEntries(
-    Object.entries(obj).map(([k, v]) => [v, k])
-  );
+    solution: `function summarizeScores(scores) {
+  if (scores.length === 0) {
+    return { min: null, max: null, average: null };
+  }
+  let min = scores[0];
+  let max = scores[0];
+  let sum = 0;
+  for (const score of scores) {
+    if (score < min) min = score;
+    if (score > max) max = score;
+    sum += score;
+  }
+  return { min, max, average: sum / scores.length };
 }`
   }
 ];
