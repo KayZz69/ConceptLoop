@@ -41,13 +41,15 @@ export function Sidebar({
 
     // Category icons
     const categoryIcons: Record<Category, string> = {
-        'Essentials': '⚡',
-        'Decisions & Validation': '✅',
-        'Loops & Aggregation': '🔁',
-        'Functions & Reuse': '🧩',
-        'Data Shaping': '🧱',
-        'Strings & Parsing': '🔤',
-        'Mini Projects': '🚀'
+        'Variables': 'V',
+        'Booleans': 'B',
+        'Operators': 'Op',
+        'Strings': 'Str',
+        'Conditionals': 'If',
+        'Functions I': 'Fn',
+        'Arrays': 'Arr',
+        'Objects': 'Obj',
+        'Loops': 'Loop'
     };
 
     // Handle category selection (close mobile menu on selection)
@@ -131,8 +133,8 @@ export function Sidebar({
                                     : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900 border border-transparent'
                             }`}
                     >
-                        <span className="text-base shrink-0">📚</span>
-                        <span className="flex-1 text-left overflow-hidden whitespace-nowrap">All Challenges</span>
+                        <span className="text-base shrink-0">All</span>
+                        <span className="flex-1 text-left overflow-hidden whitespace-nowrap">All Items</span>
                         <span className={`text-[10px] font-mono shrink-0 ${selectedCategory === null ? 'text-accent-cyan' : 'text-slate-500'}`}>
                             {totalCompleted}/{totalChallenges}
                         </span>

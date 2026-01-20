@@ -102,10 +102,32 @@ export default function App() {
         }
     }, [code, currentChallenge]);
 
-    // Handle lesson complete - transition to challenge phase
-    const handleLessonComplete = useCallback(() => {
-        setIsLessonPhase(false);
+    const markCompleted = useCallback((challengeId: string) => {
+        setCompletedChallenges(prev => {
+            if (prev.includes(challengeId)) return prev;
+            return [...prev, challengeId];
+        });
     }, []);
+
+    const advanceChallenge = useCallback(() => {
+        setCurrentChallengeIndex(prev => {
+            if (prev < filteredChallenges.length - 1) {
+                return prev + 1;
+            }
+            return prev;
+        });
+    }, [filteredChallenges.length]);
+
+    // Handle lesson complete - transition to challenge phase or advance for lesson-only items
+    const handleLessonComplete = useCallback(() => {
+        if (!currentChallenge) return;
+        if (currentChallenge.type === 'lesson') {
+            markCompleted(currentChallenge.id);
+            advanceChallenge();
+            return;
+        }
+        setIsLessonPhase(false);
+    }, [advanceChallenge, currentChallenge, markCompleted]);
 
     // Keep codeRef in sync with code state
     useEffect(() => {
@@ -114,7 +136,7 @@ export default function App() {
 
     // Handle code execution
     const handleRun = useCallback(() => {
-        if (!currentChallenge) return;
+        if (!currentChallenge || currentChallenge.type === 'lesson') return;
 
         setIsRunning(true);
 
@@ -140,16 +162,13 @@ export default function App() {
 
             const allPassed = testResults.length > 0 && testResults.every(r => r.passed);
             if (allPassed) {
-                setCompletedChallenges(prev => {
-                    if (prev.includes(currentChallenge.id)) return prev;
-                    return [...prev, currentChallenge.id];
-                });
+                markCompleted(currentChallenge.id);
                 setFailedAttempts(0);
             } else {
                 setFailedAttempts(prev => prev + 1);
             }
         }, 300);
-    }, [currentChallenge]); // No longer depends on `code` - uses codeRef instead
+    }, [currentChallenge, markCompleted]); // No longer depends on `code` - uses codeRef instead
 
     // Handle code reset
     const handleReset = useCallback(() => {
@@ -167,10 +186,8 @@ export default function App() {
     }, [currentChallengeIndex]);
 
     const handleNext = useCallback(() => {
-        if (currentChallengeIndex < filteredChallenges.length - 1) {
-            setCurrentChallengeIndex(prev => prev + 1);
-        }
-    }, [currentChallengeIndex, filteredChallenges.length]);
+        advanceChallenge();
+    }, [advanceChallenge]);
 
     // Keyboard shortcut for running code
     useEffect(() => {
@@ -251,6 +268,7 @@ export default function App() {
                             currentIndex={currentChallengeIndex}
                             totalChallenges={filteredChallenges.length}
                             theme={theme}
+                            itemType={currentChallenge.type}
                         />
                     </div>
                 ) : (

@@ -27,6 +27,7 @@ export function ProblemCard({
     theme = 'dark'
 }: ProblemCardProps) {
     const [activeTab, setActiveTab] = useState<TabType>('task');
+    const typeLabel = challenge.type === 'lesson' ? 'Lesson' : challenge.type === 'exam' ? 'Exam' : 'Challenge';
 
     const difficultyColors: Record<string, string> = {
         'Beginner': 'bg-accent-green/10 text-accent-green border border-accent-green/20',
@@ -47,7 +48,7 @@ export function ProblemCard({
                 }`}>
                 <div className="flex items-center justify-between mb-1">
                     <span className="text-[10px] font-medium text-slate-500 uppercase tracking-wider">
-                        Challenge {currentIndex + 1} of {totalChallenges}
+                        {typeLabel} {currentIndex + 1} of {totalChallenges}
                     </span>
                     <span className={`text-[10px] font-medium px-2 py-0.5 rounded ${difficultyColors[challenge.difficulty]}`}>
                         {challenge.difficulty}

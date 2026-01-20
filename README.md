@@ -29,13 +29,15 @@ An interactive JavaScript learning platform with progressive lessons and coding 
 
 | Category | Description |
 |----------|-------------|
-| Essentials | Everyday values, strings, and calculations |
-| Decisions & Validation | Rules, thresholds, and guard checks |
-| Loops & Aggregation | Counting, totals, and averages |
-| Functions & Reuse | Defaults, callbacks, and safe utilities |
-| Data Shaping | Arrays and objects for structured data |
-| Strings & Parsing | Cleaning, extracting, and formatting text |
-| Mini Projects | Applied summaries and multi-step tasks |
+| Variables | Declaring, assigning, and updating values |
+| Booleans | True/false logic and truthy/falsy values |
+| Operators | Comparisons, logic, and math operators |
+| Strings | Creating, combining, and transforming text |
+| Conditionals | if/else decisions and branching |
+| Functions I | Declaring, calling, and returning values |
+| Arrays | Creating, accessing, and modifying lists |
+| Objects | Creating, accessing, and updating key-value data |
+| Loops | Iterating with for/while and loop control |
 
 ## 🚀 Getting Started
 

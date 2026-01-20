@@ -7,9 +7,17 @@ interface LessonViewProps {
     currentIndex: number;
     totalChallenges: number;
     theme?: 'dark' | 'light';
+    itemType: 'lesson' | 'challenge' | 'exam';
 }
 
-export function LessonView({ challenge, onLessonComplete, currentIndex, totalChallenges, theme = 'dark' }: LessonViewProps) {
+export function LessonView({
+    challenge,
+    onLessonComplete,
+    currentIndex,
+    totalChallenges,
+    theme = 'dark',
+    itemType
+}: LessonViewProps) {
     const [stepIndex, setStepIndex] = useState(0);
     const [stepStates, setStepStates] = useState<Record<number, { hasRun: boolean; output: string | null }>>({});
     const [isRunning, setIsRunning] = useState<number | null>(null);
@@ -23,6 +31,7 @@ export function LessonView({ challenge, onLessonComplete, currentIndex, totalCha
     const steps = challenge.theorySteps || [];
     const totalSteps = steps.length;
     const isLastStep = stepIndex === totalSteps - 1;
+    const isLessonOnly = itemType === 'lesson';
 
     // Reset when challenge changes
     useEffect(() => {
@@ -181,7 +190,7 @@ export function LessonView({ challenge, onLessonComplete, currentIndex, totalCha
                         {/* Hint when blocked by runnable code */}
                         {needsRunCode && !hasRunCurrent && (
                             <p className="text-center text-sm text-accent-amber mb-6 animate-pulse">
-                                👆 Run the code above to continue
+                                Run the code above to continue
                             </p>
                         )}
 
@@ -196,7 +205,7 @@ export function LessonView({ challenge, onLessonComplete, currentIndex, totalCha
                                         : 'bg-slate-200 text-slate-400 cursor-not-allowed'
                                     }`}
                             >
-                                {isLastStep ? 'Start Challenge' : 'Continue'}
+                                {isLastStep ? (isLessonOnly ? 'Continue' : 'Start Challenge') : 'Continue'}
                                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                                 </svg>
@@ -218,7 +227,7 @@ export function LessonView({ challenge, onLessonComplete, currentIndex, totalCha
                         : 'text-slate-500 hover:text-slate-700'
                         }`}
                 >
-                    Skip to challenge →
+                    {isLessonOnly ? 'Skip lesson' : 'Skip to challenge'}
                 </button>
             </div>
         </div>
