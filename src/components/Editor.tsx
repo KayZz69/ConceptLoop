@@ -108,18 +108,18 @@ export function Editor({
     return (
         <div className={`h-full flex flex-col border-x ${theme === 'dark'
                 ? 'glass border-white/5'
-                : 'bg-white border-slate-200'
+                : 'glass border-[color:var(--color-border)]'
             }`}>
             {/* Editor Header - IDE Style */}
             <div className={`px-3 py-2.5 border-b flex items-center justify-between shrink-0 ${theme === 'dark'
-                    ? 'border-white/5 bg-dark-800/60'
-                    : 'border-slate-200 bg-slate-50'
+                    ? 'border-white/5 bg-[color:var(--color-bg-glass-light)]'
+                    : 'border-[color:var(--color-border)] bg-[color:var(--color-bg-glass)]'
                 }`}>
                 <div className="flex items-center gap-2">
                     {/* File tab */}
                     <div className={`flex items-center gap-2 px-3 py-1.5 rounded-t-lg border-t border-x -mb-[1px] relative ${theme === 'dark'
-                            ? 'bg-dark-700/80 border-white/10'
-                            : 'bg-white border-slate-200'
+                            ? 'bg-[color:var(--color-bg-glass-light)] border-white/10'
+                            : 'bg-[var(--color-bg-primary)] border-[color:var(--color-border)]'
                         }`}>
                         <svg className="w-3.5 h-3.5 text-accent-amber" viewBox="0 0 24 24" fill="currentColor">
                             <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
@@ -135,7 +135,7 @@ export function Editor({
                         onClick={onReset}
                         className={`px-3 py-1.5 text-xs font-medium rounded-lg transition-all border border-transparent min-h-[44px] md:min-h-0 ${theme === 'dark'
                                 ? 'text-slate-400 hover:text-white hover:bg-dark-500/50 hover:border-white/10'
-                                : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100 hover:border-slate-300'
+                                : 'text-[color:var(--color-text-secondary)] hover:text-[color:var(--color-text-primary)] hover:bg-[var(--color-bg-glass-light)] hover:border-[color:var(--color-border)]'
                             }`}
                     >
                         Reset
@@ -180,7 +180,7 @@ export function Editor({
             </div>
 
             {/* Monaco Editor */}
-            <div className={`flex-1 overflow-hidden ${theme === 'dark' ? 'code-editor' : 'bg-white border-y border-slate-200'
+            <div className={`flex-1 overflow-hidden ${theme === 'dark' ? 'code-editor' : 'bg-[var(--color-bg-primary)] border-y border-[color:var(--color-border)]'
                 }`}>
                 <MonacoEditor
                     height="100%"
@@ -190,7 +190,8 @@ export function Editor({
                     onChange={handleEditorChange}
                     onMount={handleEditorDidMount}
                     options={{
-                        fontSize: 14,
+                        fontSize: 15,
+                        lineHeight: 22,
                         fontFamily: "'JetBrains Mono', 'Fira Code', 'Consolas', monospace",
                         minimap: { enabled: false },
                         scrollBeyondLastLine: false,
@@ -227,7 +228,7 @@ export function Editor({
                         },
                     }}
                     loading={
-                        <div className="h-full flex items-center justify-center bg-dark-900">
+                        <div className={`h-full flex items-center justify-center ${theme === 'dark' ? 'bg-dark-900' : 'bg-[color:var(--color-bg-glass)]'}`}>
                             <div className="flex items-center gap-3 text-slate-400">
                                 <span className="w-5 h-5 border-2 border-accent-cyan border-t-transparent rounded-full animate-spin" />
                                 Loading editor...
@@ -239,34 +240,32 @@ export function Editor({
 
             {/* Editor Footer - Keyboard hints (hidden on mobile) */}
             <div className={`hidden md:flex px-3 py-2 border-t items-center justify-between shrink-0 ${theme === 'dark'
-                    ? 'border-white/5 bg-dark-800/60'
-                    : 'border-slate-200 bg-slate-50'
+                    ? 'border-white/5 bg-[color:var(--color-bg-glass-light)]'
+                    : 'border-[color:var(--color-border)] bg-[color:var(--color-bg-glass)]'
                 }`}>
-                <span className={`text-[10px] flex items-center gap-3 ${theme === 'dark' ? 'text-slate-500' : 'text-slate-500'
-                    }`}>
+                <span className="text-[10px] flex items-center gap-3 text-[color:var(--color-text-muted)]">
                     <span className="flex items-center gap-1">
                         <kbd className={`px-1.5 py-0.5 rounded text-[10px] border ${theme === 'dark'
                                 ? 'bg-dark-600 text-slate-400 border-white/10'
-                                : 'bg-slate-100 text-slate-600 border-slate-300'
+                                : 'bg-[var(--color-bg-glass-light)] text-[color:var(--color-text-secondary)] border-[color:var(--color-border)]'
                             }`}>Tab</kbd>
                         <span>indent</span>
                     </span>
-                    <span className={theme === 'dark' ? 'text-slate-700' : 'text-slate-400'}>•</span>
+                    <span className="text-[color:var(--color-text-dim)]">•</span>
                     <span className="flex items-center gap-1">
                         <kbd className={`px-1.5 py-0.5 rounded text-[10px] border ${theme === 'dark'
                                 ? 'bg-dark-600 text-slate-400 border-white/10'
-                                : 'bg-slate-100 text-slate-600 border-slate-300'
+                                : 'bg-[var(--color-bg-glass-light)] text-[color:var(--color-text-secondary)] border-[color:var(--color-border)]'
                             }`}>Ctrl</kbd>
                         <span>+</span>
                         <kbd className={`px-1.5 py-0.5 rounded text-[10px] border ${theme === 'dark'
                                 ? 'bg-dark-600 text-slate-400 border-white/10'
-                                : 'bg-slate-100 text-slate-600 border-slate-300'
+                                : 'bg-[var(--color-bg-glass-light)] text-[color:var(--color-text-secondary)] border-[color:var(--color-border)]'
                             }`}>Enter</kbd>
                         <span>run</span>
                     </span>
                 </span>
-                <span className={`text-[10px] font-mono ${theme === 'dark' ? 'text-slate-500' : 'text-slate-500'
-                    }`}>
+                <span className="text-[10px] font-mono text-[color:var(--color-text-muted)]">
                     {lineCount} line{lineCount !== 1 ? 's' : ''}
                 </span>
             </div>

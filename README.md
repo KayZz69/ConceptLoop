@@ -13,7 +13,8 @@ An interactive JavaScript learning platform with progressive lessons and coding 
 ### User Interface
 - **Focus Mode** - Collapsible sidebar for distraction-free learning
 - **Smooth Transitions** - Animated UI with auto-scroll to new content
-- **Dark Theme** - Easy on the eyes with modern glassmorphism design
+- **Pastel Palette** - Soft mint/lilac/cotton accents with warm, airy surfaces
+- **Readable Typography** - Manrope body text with Space Grotesk display titles
 
 ### Progress Tracking
 - **Code Persistence** - Your solutions are saved locally

@@ -30,43 +30,43 @@ export function ProblemCard({
     const typeLabel = challenge.type === 'lesson' ? 'Lesson' : challenge.type === 'exam' ? 'Exam' : 'Challenge';
 
     const difficultyColors: Record<string, string> = {
-        'Beginner': 'bg-accent-green/10 text-accent-green border border-accent-green/20',
-        'Easy': 'bg-accent-cyan/10 text-accent-cyan border border-accent-cyan/20',
-        'Medium': 'bg-accent-amber/10 text-accent-amber border border-accent-amber/20',
-        'Hard': 'bg-red-500/10 text-red-400 border border-red-500/20'
+        'Beginner': 'bg-accent-green/20 text-accent-green border border-accent-green/40',
+        'Easy': 'bg-accent-cyan/20 text-accent-cyan border border-accent-cyan/40',
+        'Medium': 'bg-accent-amber/20 text-accent-amber border border-accent-amber/40',
+        'Hard': 'bg-accent-pink/20 text-accent-pink border border-accent-pink/40'
     };
 
     return (
         <div className={`h-full flex flex-col border-r overflow-hidden ${theme === 'dark'
                 ? 'glass-dark border-white/5'
-                : 'bg-white border-slate-200'
+                : 'glass border-[color:var(--color-border)]'
             }`}>
             {/* Header with Title */}
             <div className={`shrink-0 px-4 py-3 border-b ${theme === 'dark'
-                    ? 'border-white/5 bg-dark-800/50'
-                    : 'border-slate-200 bg-slate-50'
+                    ? 'border-white/5 bg-[color:var(--color-bg-glass-light)]'
+                    : 'border-[color:var(--color-border)] bg-[var(--color-bg-secondary)]'
                 }`}>
                 <div className="flex items-center justify-between mb-1">
-                    <span className="text-[10px] font-medium text-slate-500 uppercase tracking-wider">
+                    <span className="text-[10px] font-medium text-[color:var(--color-text-muted)] uppercase tracking-wider">
                         {typeLabel} {currentIndex + 1} of {totalChallenges}
                     </span>
                     <span className={`text-[10px] font-medium px-2 py-0.5 rounded ${difficultyColors[challenge.difficulty]}`}>
                         {challenge.difficulty}
                     </span>
                 </div>
-                <h1 className={`text-lg font-semibold leading-tight ${theme === 'dark' ? 'text-white' : 'text-slate-900'
+                <h1 className={`text-xl md:text-[22px] font-semibold leading-tight ${theme === 'dark' ? 'text-white' : 'text-slate-900'
                     }`}>
                     {challenge.title}
                 </h1>
             </div>
 
             {/* Tab Navigation */}
-            <div className={`shrink-0 flex border-b ${theme === 'dark' ? 'border-white/5' : 'border-slate-200'}`}>
+            <div className={`shrink-0 flex border-b ${theme === 'dark' ? 'border-white/5' : 'border-[color:var(--color-border)]'}`}>
                 <button
                     onClick={() => setActiveTab('task')}
                     className={`flex-1 px-4 py-2.5 text-xs font-medium transition-all relative ${activeTab === 'task'
                         ? 'text-accent-cyan'
-                        : 'text-slate-500 hover:text-slate-300'
+                        : theme === 'dark' ? 'text-slate-500 hover:text-slate-300' : 'text-[color:var(--color-text-muted)] hover:text-[color:var(--color-text-primary)]'
                         }`}
                 >
                     📋 Task
@@ -78,7 +78,7 @@ export function ProblemCard({
                     onClick={() => setActiveTab('lesson')}
                     className={`flex-1 px-4 py-2.5 text-xs font-medium transition-all relative ${activeTab === 'lesson'
                         ? 'text-accent-purple'
-                        : 'text-slate-500 hover:text-slate-300'
+                        : theme === 'dark' ? 'text-slate-500 hover:text-slate-300' : 'text-[color:var(--color-text-muted)] hover:text-[color:var(--color-text-primary)]'
                         }`}
                 >
                     📖 Lesson Review
@@ -97,22 +97,23 @@ export function ProblemCard({
                         showSolution={showSolution}
                         onRevealSolution={onRevealSolution}
                         onSwitchToLesson={() => setActiveTab('lesson')}
+                        theme={theme}
                     />
                 ) : (
-                    <LessonReviewTab steps={challenge.theorySteps || []} />
+                    <LessonReviewTab steps={challenge.theorySteps || []} theme={theme} />
                 )}
             </div>
 
             {/* Navigation Footer */}
             <div className={`shrink-0 px-4 py-2.5 border-t flex justify-between ${theme === 'dark'
-                    ? 'border-white/5 bg-dark-800/50'
-                    : 'border-slate-200 bg-slate-50'
+                    ? 'border-white/5 bg-[color:var(--color-bg-glass-light)]'
+                    : 'border-[color:var(--color-border)] bg-[var(--color-bg-secondary)]'
                 }`}>
                 <button
                     onClick={onPrevious}
                     disabled={currentIndex === 0}
-                    className="px-3 py-1.5 text-xs font-medium text-slate-400 hover:text-white 
-                     disabled:opacity-30 disabled:cursor-not-allowed transition-colors flex items-center gap-1"
+                    className={`px-3 py-1.5 text-xs font-medium transition-colors flex items-center gap-1 
+                     disabled:opacity-30 disabled:cursor-not-allowed ${theme === 'dark' ? 'text-slate-400 hover:text-white' : 'text-[color:var(--color-text-muted)] hover:text-[color:var(--color-text-primary)]'}`}
                 >
                     <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
@@ -122,8 +123,8 @@ export function ProblemCard({
                 <button
                     onClick={onNext}
                     disabled={currentIndex === totalChallenges - 1}
-                    className="px-3 py-1.5 text-xs font-medium text-slate-400 hover:text-white 
-                     disabled:opacity-30 disabled:cursor-not-allowed transition-colors flex items-center gap-1"
+                    className={`px-3 py-1.5 text-xs font-medium transition-colors flex items-center gap-1 
+                     disabled:opacity-30 disabled:cursor-not-allowed ${theme === 'dark' ? 'text-slate-400 hover:text-white' : 'text-[color:var(--color-text-muted)] hover:text-[color:var(--color-text-primary)]'}`}
                 >
                     Next
                     <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -142,18 +143,19 @@ interface TaskTabProps {
     showSolution: boolean;
     onRevealSolution: () => void;
     onSwitchToLesson: () => void;
+    theme: 'dark' | 'light';
 }
 
-function TaskTab({ challenge, failedAttempts, showSolution, onRevealSolution, onSwitchToLesson }: TaskTabProps) {
+function TaskTab({ challenge, failedAttempts, showSolution, onRevealSolution, onSwitchToLesson, theme }: TaskTabProps) {
     return (
         <div className="animate-fadeIn">
             {/* YOUR TASK */}
-            <div className="px-4 py-4 border-b border-white/5">
+            <div className={`px-4 py-4 border-b ${theme === 'dark' ? 'border-white/5' : 'border-[color:var(--color-border)]'}`}>
                 <h2 className="text-[10px] font-bold text-accent-cyan uppercase tracking-wider mb-2 flex items-center gap-2">
                     <span className="w-1.5 h-1.5 bg-accent-cyan rounded-full animate-pulse"></span>
                     Your Task
                 </h2>
-                <p className="text-sm text-slate-300 leading-relaxed">
+                <p className={`text-[15px] leading-relaxed ${theme === 'dark' ? 'text-slate-200' : 'text-slate-700'}`}>
                     {challenge.description}
                 </p>
 
@@ -181,7 +183,7 @@ function TaskTab({ challenge, failedAttempts, showSolution, onRevealSolution, on
                 <div className="mt-4 text-center">
                     <button
                         onClick={onSwitchToLesson}
-                        className="text-xs text-slate-500 hover:text-accent-purple transition-colors"
+                        className={`text-xs transition-colors ${theme === 'dark' ? 'text-slate-500 hover:text-accent-purple' : 'text-[color:var(--color-text-muted)] hover:text-accent-purple'}`}
                     >
                         Need a refresher? <span className="underline">Review the lesson</span> →
                     </button>
@@ -190,7 +192,7 @@ function TaskTab({ challenge, failedAttempts, showSolution, onRevealSolution, on
 
             {/* SOLUTION - Shows after user clicks reveal */}
             {challenge.solution && showSolution && (
-                <div className="border-b border-white/5 px-4 py-4 animate-fadeIn">
+                <div className={`border-b px-4 py-4 animate-fadeIn ${theme === 'dark' ? 'border-white/5' : 'border-[color:var(--color-border)]'}`}>
                     <div className="flex items-center gap-2 mb-3">
                         <span className="text-accent-green text-sm">✅</span>
                         <span className="text-[10px] font-bold text-accent-green uppercase tracking-wider">
@@ -200,7 +202,7 @@ function TaskTab({ challenge, failedAttempts, showSolution, onRevealSolution, on
                     <pre className="code-editor rounded-lg px-4 py-3 overflow-x-auto font-mono text-xs leading-relaxed text-accent-cyan">
                         <code>{challenge.solution}</code>
                     </pre>
-                    <p className="text-[10px] text-slate-500 mt-2 italic">
+                    <p className={`text-[10px] mt-2 italic ${theme === 'dark' ? 'text-slate-500' : 'text-[color:var(--color-text-muted)]'}`}>
                         💡 Study the solution and try to understand why it works.
                     </p>
                 </div>
@@ -208,7 +210,7 @@ function TaskTab({ challenge, failedAttempts, showSolution, onRevealSolution, on
 
             {/* Reveal Solution Button */}
             {challenge.solution && failedAttempts >= 3 && !showSolution && (
-                <div className="border-b border-white/5 px-4 py-3">
+                <div className={`border-b px-4 py-3 ${theme === 'dark' ? 'border-white/5' : 'border-[color:var(--color-border)]'}`}>
                     <button
                         onClick={onRevealSolution}
                         className="w-full flex items-center justify-center gap-2 px-4 py-2.5 bg-accent-purple/10 text-accent-purple 
@@ -217,7 +219,7 @@ function TaskTab({ challenge, failedAttempts, showSolution, onRevealSolution, on
                         <span>🔓</span>
                         Show Solution
                     </button>
-                    <p className="text-[10px] text-slate-500 text-center mt-2">
+                    <p className={`text-[10px] text-center mt-2 ${theme === 'dark' ? 'text-slate-500' : 'text-[color:var(--color-text-muted)]'}`}>
                         Stuck? It's okay to learn from the solution.
                     </p>
                 </div>
@@ -229,20 +231,21 @@ function TaskTab({ challenge, failedAttempts, showSolution, onRevealSolution, on
 // Lesson Review Tab - Renders all steps as scrollable reference
 interface LessonReviewTabProps {
     steps: TheoryStep[];
+    theme: 'dark' | 'light';
 }
 
-function LessonReviewTab({ steps }: LessonReviewTabProps) {
+function LessonReviewTab({ steps, theme }: LessonReviewTabProps) {
     if (steps.length === 0) {
         return (
             <div className="px-4 py-8 text-center">
-                <p className="text-sm text-slate-500">No lesson content available.</p>
+                <p className={`text-sm ${theme === 'dark' ? 'text-slate-500' : 'text-[color:var(--color-text-muted)]'}`}>No lesson content available.</p>
             </div>
         );
     }
 
     return (
         <div className="px-4 py-4 space-y-6 animate-fadeIn">
-            <div className="text-[10px] font-medium text-slate-500 uppercase tracking-wider mb-4">
+            <div className={`text-[10px] font-medium uppercase tracking-wider mb-4 ${theme === 'dark' ? 'text-slate-500' : 'text-[color:var(--color-text-muted)]'}`}>
                 📚 Quick Reference
             </div>
 
@@ -256,8 +259,8 @@ function LessonReviewTab({ steps }: LessonReviewTabProps) {
                     </div>
 
                     {/* Step text - smaller for reference */}
-                    <p className="text-xs text-slate-400 leading-relaxed">
-                        {renderInlineText(step.text)}
+                    <p className={`text-xs leading-relaxed ${theme === 'dark' ? 'text-slate-400' : 'text-[color:var(--color-text-muted)]'}`}>
+                        {renderInlineText(step.text, theme)}
                     </p>
 
                     {/* Code example if present */}
@@ -273,7 +276,7 @@ function LessonReviewTab({ steps }: LessonReviewTabProps) {
 }
 
 // Helper to render inline formatting (bold, code)
-function renderInlineText(text: string): React.ReactNode {
+function renderInlineText(text: string, theme: 'dark' | 'light' = 'dark'): React.ReactNode {
     const parts: React.ReactNode[] = [];
     let remaining = text;
     let key = 0;
@@ -297,7 +300,7 @@ function renderInlineText(text: string): React.ReactNode {
                 parts.push(remaining.slice(0, boldMatch.index));
             }
             parts.push(
-                <strong key={key++} className="font-semibold text-slate-300">
+                <strong key={key++} className={`font-semibold ${theme === 'dark' ? 'text-slate-300' : 'text-slate-800'}`}>
                     {boldMatch[1]}
                 </strong>
             );

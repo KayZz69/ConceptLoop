@@ -38,7 +38,7 @@ export function MobileTabBar({ activeTab, onTabChange, theme = 'dark' }: MobileT
     ];
 
     return (
-        <nav className={`md:hidden fixed bottom-0 left-0 right-0 z-40 border-t safe-area-bottom ${theme === 'dark' ? 'glass-dark border-white/5' : 'bg-white border-slate-200 shadow-lg'
+        <nav className={`md:hidden fixed bottom-0 left-0 right-0 z-40 border-t safe-area-bottom ${theme === 'dark' ? 'glass-dark border-white/5' : 'glass border-[color:var(--color-border)] shadow-[0_-8px_24px_rgba(32,27,43,0.12)]'
             }`}>
             <div className="flex">
                 {tabs.map((tab) => {
@@ -54,7 +54,7 @@ export function MobileTabBar({ activeTab, onTabChange, theme = 'dark' }: MobileT
                                     ? isRun
                                         ? 'text-accent-green'
                                         : 'text-accent-cyan'
-                                    : 'text-slate-500 hover:text-slate-300'
+                                    : theme === 'dark' ? 'text-slate-500 hover:text-slate-300' : 'text-[color:var(--color-text-muted)] hover:text-[color:var(--color-text-primary)]'
                                 }`}
                         >
                             <div className={`mb-1 ${isRun && isActive ? 'scale-110' : ''} transition-transform`}>

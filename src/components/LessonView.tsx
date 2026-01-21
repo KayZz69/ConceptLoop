@@ -99,8 +99,10 @@ export function LessonView({
         'Beginner': 'text-accent-green',
         'Easy': 'text-accent-cyan',
         'Medium': 'text-accent-amber',
-        'Hard': 'text-red-400'
+        'Hard': 'text-accent-pink'
     };
+
+    const inactiveProgressClass = theme === 'dark' ? 'bg-dark-600' : 'bg-[var(--color-bg-tertiary)]';
 
     if (steps.length === 0) {
         onLessonComplete();
@@ -114,25 +116,25 @@ export function LessonView({
         <div className="flex-1 flex flex-col min-h-0">
             {/* Fixed header - responsive padding */}
             <div className={`shrink-0 px-4 md:px-8 py-3 md:py-4 border-b backdrop-blur-sm ${theme === 'dark'
-                ? 'border-white/5 bg-dark-900/80'
-                : 'border-slate-200 bg-white/80'
+                ? 'border-white/5 bg-[color:var(--color-bg-glass-dark)]'
+                : 'border-[color:var(--color-border)] bg-[color:var(--color-bg-glass)]'
                 }`}>
                 <div className="max-w-3xl mx-auto">
                     <div className="flex items-center justify-between mb-2 md:mb-3">
                         <div className="flex items-center gap-2 md:gap-3">
-                            <span className="text-xs text-slate-500">
+                            <span className="text-xs text-[color:var(--color-text-muted)]">
                                 {challenge.category}
                             </span>
-                            <span className={theme === 'dark' ? 'text-white/20' : 'text-slate-300'}>•</span>
+                            <span className={theme === 'dark' ? 'text-white/20' : 'text-[color:var(--color-text-dim)]'}>•</span>
                             <span className={`text-xs ${difficultyColors[challenge.difficulty]} hidden md:inline`}>
                                 {challenge.difficulty}
                             </span>
                         </div>
-                        <span className="text-xs text-slate-500">
+                        <span className="text-xs text-[color:var(--color-text-muted)]">
                             {currentIndex + 1} / {totalChallenges}
                         </span>
                     </div>
-                    <h1 className={`text-xl md:text-2xl font-bold mb-2 md:mb-3 ${theme === 'dark' ? 'text-white' : 'text-slate-900'
+                    <h1 className={`text-2xl md:text-3xl font-bold mb-2 md:mb-3 ${theme === 'dark' ? 'text-white' : 'text-slate-900'
                         }`}>
                         {challenge.title}
                     </h1>
@@ -143,7 +145,7 @@ export function LessonView({
                                 key={idx}
                                 className={`h-1 flex-1 rounded-full transition-all duration-300 ${idx < stepIndex ? 'bg-accent-green' :
                                     idx === stepIndex ? 'bg-accent-purple' :
-                                        'bg-dark-600'
+                                        inactiveProgressClass
                                     }`}
                             />
                         ))}
@@ -158,7 +160,7 @@ export function LessonView({
             >
                 <div className="max-w-3xl mx-auto">
                     {/* Continuous content flow - no card borders */}
-                    <div className={`divide-y ${theme === 'dark' ? 'divide-white/5' : 'divide-slate-200'
+                    <div className={`divide-y ${theme === 'dark' ? 'divide-white/5' : 'divide-[color:var(--color-border)]'
                         }`}>
                         {visibleSteps.map((step, idx) => {
                             const isCompleted = idx < stepIndex;
@@ -202,7 +204,7 @@ export function LessonView({
                                     ? 'bg-accent-purple text-white hover:bg-accent-purple/90 shadow-lg shadow-accent-purple/20 hover:shadow-xl hover:shadow-accent-purple/30 hover:-translate-y-0.5'
                                     : theme === 'dark'
                                         ? 'bg-dark-600 text-slate-500 cursor-not-allowed'
-                                        : 'bg-slate-200 text-slate-400 cursor-not-allowed'
+                                        : 'bg-[var(--color-bg-tertiary)] text-[color:var(--color-text-dim)] cursor-not-allowed'
                                     }`}
                             >
                                 {isLastStep ? (isLessonOnly ? 'Continue' : 'Start Challenge') : 'Continue'}
@@ -217,14 +219,14 @@ export function LessonView({
 
             {/* Skip lesson link - fixed at bottom, touch-friendly with safe-area for notched devices */}
             <div className={`shrink-0 py-2 md:py-3 text-center border-t safe-area-bottom ${theme === 'dark'
-                ? 'border-white/5 bg-dark-900/80'
-                : 'border-slate-200 bg-white/80'
+                ? 'border-white/5 bg-[color:var(--color-bg-glass-dark)]'
+                : 'border-[color:var(--color-border)] bg-[color:var(--color-bg-glass)]'
                 }`}>
                 <button
                     onClick={onLessonComplete}
                     className={`text-xs transition-colors py-2 px-4 min-h-[44px] ${theme === 'dark'
                         ? 'text-slate-600 hover:text-slate-400'
-                        : 'text-slate-500 hover:text-slate-700'
+                        : 'text-[color:var(--color-text-muted)] hover:text-[color:var(--color-text-secondary)]'
                         }`}
                 >
                     {isLessonOnly ? 'Skip lesson' : 'Skip to challenge'}
@@ -249,7 +251,7 @@ function StepCard({ step, hasRun, output, isRunning, onRunCode, theme }: StepCar
     return (
         <div className="py-6 md:py-8">
             {/* Step text content - clean, borderless */}
-            <p className={`text-base md:text-lg leading-relaxed ${theme === 'dark' ? 'text-slate-200' : 'text-slate-600'
+            <p className={`text-[17px] md:text-[18px] leading-relaxed ${theme === 'dark' ? 'text-slate-200' : 'text-[color:var(--color-text-secondary)]'
                 }`}>
                 {renderText(step.text, theme)}
             </p>
@@ -295,9 +297,9 @@ function StepCard({ step, hasRun, output, isRunning, onRunCode, theme }: StepCar
                     {output && (
                         <div className={`mt-4 rounded-lg md:rounded-xl px-4 md:px-5 py-3 md:py-4 border animate-fadeIn ${theme === 'dark'
                                 ? 'bg-dark-900/80 border-accent-cyan/20'
-                                : 'bg-slate-100 border-slate-300'
+                                : 'bg-[var(--color-bg-secondary)] border-[color:var(--color-border)]'
                             }`}>
-                            <div className="text-xs text-slate-500 uppercase tracking-wider mb-2 flex items-center gap-2">
+                            <div className="text-xs text-[color:var(--color-text-muted)] uppercase tracking-wider mb-2 flex items-center gap-2">
                                 <span className="w-2 h-2 bg-accent-cyan rounded-full animate-pulse" />
                                 Output
                             </div>

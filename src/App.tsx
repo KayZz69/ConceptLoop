@@ -38,7 +38,7 @@ export default function App() {
     // Theme state with localStorage persistence
     const [theme, setTheme] = useState<'dark' | 'light'>(() => {
         const saved = localStorage.getItem('conceptLoop_theme');
-        return (saved === 'light' || saved === 'dark') ? saved : 'dark';
+        return (saved === 'light' || saved === 'dark') ? saved : 'light';
     });
 
     // Apply theme to document
@@ -218,15 +218,14 @@ export default function App() {
     // Guard against no challenges in category
     if (!currentChallenge) {
         return (
-            <div className="h-screen flex items-center justify-center bg-dark-900">
-                <div className="text-slate-400">No challenges found</div>
+            <div className="h-screen flex items-center justify-center bg-[var(--color-bg-primary)]">
+                <div className="text-[color:var(--color-text-muted)]">No challenges found</div>
             </div>
         );
     }
 
     return (
-        <div className={`h-screen flex flex-col md:flex-row overflow-hidden ${theme === 'dark' ? 'bg-dark-900' : 'bg-slate-50'
-            }`}>
+        <div className="h-screen flex flex-col md:flex-row overflow-hidden bg-transparent">
             {/* Mobile Header */}
             <MobileHeader
                 onMenuToggle={() => setIsMobileMenuOpen(prev => !prev)}
@@ -258,10 +257,7 @@ export default function App() {
             <div className="flex-1 flex flex-col min-w-0 min-h-0 pt-14 md:pt-0">
                 {isLessonPhase ? (
                     /* LESSON PHASE: Vertical stack lesson view */
-                    <div className={`flex-1 flex flex-col min-w-0 min-h-0 ${theme === 'dark'
-                        ? 'bg-gradient-to-br from-dark-900 via-dark-800 to-dark-900'
-                        : 'bg-slate-50'
-                        }`}>
+                    <div className="flex-1 flex flex-col min-w-0 min-h-0 bg-transparent">
                         <LessonView
                             challenge={currentChallenge}
                             onLessonComplete={handleLessonComplete}
@@ -277,14 +273,14 @@ export default function App() {
                         {/* Header - visible on desktop, simplified on mobile */}
                         <header className={`px-4 py-2.5 flex items-center justify-between shrink-0 border-b ${theme === 'dark'
                             ? 'glass-dark border-white/5'
-                            : 'bg-white border-slate-200 shadow-sm'
+                            : 'glass border-[color:var(--color-border)] shadow-[0_6px_18px_rgba(32,27,43,0.08)]'
                             }`}>
                             <div className="flex items-center gap-3">
                                 <button
                                     onClick={() => setIsLessonPhase(true)}
                                     className={`text-xs transition-colors flex items-center gap-1 min-h-[44px] md:min-h-0 ${theme === 'dark'
                                         ? 'text-slate-500 hover:text-accent-purple'
-                                        : 'text-slate-500 hover:text-accent-purple'
+                                        : 'text-[color:var(--color-text-muted)] hover:text-accent-purple'
                                         }`}
                                 >
                                     <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -293,7 +289,7 @@ export default function App() {
                                     <span className="hidden md:inline">Back to Lesson</span>
                                     <span className="md:hidden">Lesson</span>
                                 </button>
-                                <span className={theme === 'dark' ? 'text-white/20' : 'text-slate-300'}>|</span>
+                                <span className={theme === 'dark' ? 'text-white/20' : 'text-[color:var(--color-text-dim)]'}>|</span>
                                 <span className="text-xs font-medium text-accent-cyan px-2 py-1 bg-accent-cyan/10 rounded border border-accent-cyan/20 hidden md:inline">
                                     {currentChallenge.category}
                                 </span>
@@ -301,22 +297,22 @@ export default function App() {
                                     }`}>
                                     {currentChallenge.title}
                                 </h1>
-                                <span className={`text-xs font-medium px-2 py-0.5 rounded hidden md:inline ${currentChallenge.difficulty === 'Beginner' ? 'bg-accent-green/10 text-accent-green border border-accent-green/20' :
-                                    currentChallenge.difficulty === 'Easy' ? 'bg-accent-cyan/10 text-accent-cyan border border-accent-cyan/20' :
-                                        currentChallenge.difficulty === 'Medium' ? 'bg-accent-amber/10 text-accent-amber border border-accent-amber/20' :
-                                            'bg-red-500/10 text-red-400 border border-red-500/20'
+                                <span className={`text-xs font-medium px-2 py-0.5 rounded hidden md:inline ${currentChallenge.difficulty === 'Beginner' ? 'bg-accent-green/20 text-accent-green border border-accent-green/40' :
+                                    currentChallenge.difficulty === 'Easy' ? 'bg-accent-cyan/20 text-accent-cyan border border-accent-cyan/40' :
+                                        currentChallenge.difficulty === 'Medium' ? 'bg-accent-amber/20 text-accent-amber border border-accent-amber/40' :
+                                            'bg-accent-pink/20 text-accent-pink border border-accent-pink/40'
                                     }`}>
                                     {currentChallenge.difficulty}
                                 </span>
                             </div>
-                            <div className={`text-sm font-mono ${theme === 'dark' ? 'text-slate-400' : 'text-slate-500'
+                            <div className={`text-sm font-mono ${theme === 'dark' ? 'text-slate-400' : 'text-[color:var(--color-text-muted)]'
                                 }`}>
                                 {currentChallengeIndex + 1} / {filteredChallenges.length}
                             </div>
                         </header>
 
                         {/* DESKTOP: 3-Column Layout */}
-                        <main className="hidden md:grid flex-1 grid-cols-3 overflow-hidden">
+                        <main className="hidden md:grid flex-1 grid-cols-[1.05fr_1.45fr_0.9fr] overflow-hidden">
                             <ProblemCard
                                 challenge={currentChallenge}
                                 currentIndex={currentChallengeIndex}

@@ -7,25 +7,26 @@ export default {
     theme: {
         extend: {
             fontFamily: {
-                sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
+                sans: ['Manrope', 'Segoe UI', 'sans-serif'],
+                display: ['Space Grotesk', 'Segoe UI', 'sans-serif'],
                 mono: ['JetBrains Mono', 'Fira Code', 'Consolas', 'monospace'],
             },
             colors: {
                 // Premium dark palette
                 dark: {
-                    900: '#0a0a0f',
-                    800: '#0f0f18',
-                    700: '#161625',
-                    600: '#1e1e32',
-                    500: '#2a2a45',
+                    900: '#0b0a0d',
+                    800: '#121017',
+                    700: '#1a1722',
+                    600: '#231f2c',
+                    500: '#2c2736',
                 },
                 // Accent colors - vibrant neon
                 accent: {
-                    cyan: '#00d4ff',
-                    purple: '#a855f7',
-                    pink: '#f472b6',
-                    green: '#34d399',
-                    amber: '#fbbf24',
+                    cyan: 'rgb(var(--color-accent-cyan) / <alpha-value>)',
+                    purple: 'rgb(var(--color-accent-purple) / <alpha-value>)',
+                    pink: 'rgb(var(--color-accent-pink) / <alpha-value>)',
+                    green: 'rgb(var(--color-accent-green) / <alpha-value>)',
+                    amber: 'rgb(var(--color-accent-amber) / <alpha-value>)',
                 },
                 // Slate shades (preserved)
                 slate: {
@@ -49,9 +50,9 @@ export default {
                 xs: '2px',
             },
             boxShadow: {
-                'glow-cyan': '0 0 20px rgba(0, 212, 255, 0.3)',
-                'glow-purple': '0 0 20px rgba(168, 85, 247, 0.3)',
-                'glow-green': '0 0 15px rgba(52, 211, 153, 0.4)',
+                'glow-cyan': '0 0 20px rgba(172, 236, 247, 0.35)',
+                'glow-purple': '0 0 20px rgba(218, 196, 247, 0.35)',
+                'glow-green': '0 0 15px rgba(214, 246, 221, 0.45)',
             },
             animation: {
                 'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
@@ -59,8 +60,8 @@ export default {
             },
             keyframes: {
                 glow: {
-                    '0%': { boxShadow: '0 0 5px rgba(0, 212, 255, 0.2)' },
-                    '100%': { boxShadow: '0 0 20px rgba(0, 212, 255, 0.5)' },
+                    '0%': { boxShadow: '0 0 6px rgba(172, 236, 247, 0.25)' },
+                    '100%': { boxShadow: '0 0 22px rgba(218, 196, 247, 0.45)' },
                 },
             },
         },
